@@ -1,0 +1,159 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Your Budget Recommendations</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
+		<script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+		<noscript><link rel="stylesheet" href="{{ url_for('static', filename='css/noscript.css') }}" /></noscript>
+	</head>
+	<body class="is-preload">
+		<!-- Wrapper -->
+			<div id="wrapper">
+				{% include 'header.html' %}
+
+				<!-- Main -->
+					<div id="main">
+						<div class="inner">
+							<header>
+								<h1>Your Personalized Budget Plan</h1>
+								<p>Based on your income, age, family size, and location, here's your ideal budget allocation:</p>
+							</header>
+
+							<section>
+								<!-- User Information -->
+								<div class="box">
+									<h3>Your Profile</h3>
+									<div class="row">
+										<div class="col-6 col-12-medium">
+											<ul>
+												<li><strong>Monthly Income:</strong> ₹{{ "%.0f"|format(budget_data.monthly_income) }}</li>
+												<li><strong>Age Range:</strong> {{ budget_data.age_range }}</li>
+											</ul>
+										</div>
+										<div class="col-6 col-12-medium">
+											<ul>
+												<li><strong>Family Size:</strong> {{ budget_data.family_size }}</li>
+												<li><strong>Location:</strong> {{ budget_data.location }}</li>
+											</ul>
+										</div>
+									</div>
+								</div>
+
+								<!-- Pie Chart -->
+								{% if chart_data %}
+								<div style="text-align: center; margin: 2rem 0;">
+									<h3>Budget Allocation</h3>
+									<canvas id="budgetChart" width="400" height="400" style="max-width: 500px; max-height: 500px;"></canvas>
+								</div>
+								{% endif %}
+
+								<!-- Budget Details Table -->
+								{% if recommendations %}
+								<div class="table-wrapper">
+									<h3>Detailed Breakdown</h3>
+									<table>
+										<thead>
+											<tr>
+												<th>Category</th>
+												<th>Percentage</th>
+												<th>Amount (₹)</th>
+											</tr>
+										</thead>
+										<tbody>
+											{% for category, data in recommendations.items() %}
+											<tr>
+												<td>{{ category }}</td>
+												<td>{{ data.display_percentage }}</td>
+												<td>{{ data.display_amount }}</td>
+											</tr>
+											{% endfor %}
+										</tbody>
+										<tfoot>
+											<tr>
+												<td><strong>Total</strong></td>
+												<td><strong>100%</strong></td>
+												<td><strong>₹{{ "%.0f"|format(budget_data.monthly_income) }}</strong></td>
+											</tr>
+										</tfoot>
+									</table>
+								</div>
+								{% endif %}
+
+								<!-- Action Buttons -->
+								<div class="row" style="margin-top: 2rem;">
+									<div class="col-6">
+										<ul class="actions">
+											<li><a href="{{ url_for('index') }}" class="button primary">Modify Budget</a></li>
+										</ul>
+									</div>
+									<div class="col-6">
+										<ul class="actions">
+											<li><a href="#" class="button">Download PDF Report</a></li>
+										</ul>
+									</div>
+								</div>
+							</section>
+						</div>
+					</div>
+
+				{% include 'footer.html' %}
+			</div>
+
+		<!-- Scripts -->
+			<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+			<script src="{{ url_for('static', filename='js/browser.min.js') }}"></script>
+			<script src="{{ url_for('static', filename='js/breakpoints.min.js') }}"></script>
+			<script src="{{ url_for('static', filename='js/util.js') }}"></script>
+			<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+		<!-- Chart.js -->
+		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+		<script>
+		document.addEventListener('DOMContentLoaded', function() {
+			const chartData = {{ chart_data|tojson|safe }};
+
+			if (chartData) {
+				const ctx = document.getElementById('budgetChart').getContext('2d');
+				new Chart(ctx, {
+					type: 'pie',
+					data: {
+						labels: chartData.labels,
+						datasets: [{
+							data: chartData.percentages,
+							backgroundColor: chartData.colors,
+							borderWidth: 2,
+							borderColor: '#ffffff'
+						}]
+					},
+					options: {
+						responsive: true,
+						plugins: {
+							legend: {
+								position: 'right',
+								labels: {
+									font: {
+										size: 11
+									},
+									padding: 15
+								}
+							},
+							tooltip: {
+								callbacks: {
+									label: function(context) {
+										const label = context.label || '';
+										const value = context.parsed;
+										const amount = chartData.amounts[context.dataIndex];
+										return `${label}: ${value.toFixed(1)}% (₹${amount.toLocaleString('en-IN')})`;
+									}
+								}
+							}
+						}
+					}
+				});
+			}
+		});
+		</script>
+	</body>
+</html>

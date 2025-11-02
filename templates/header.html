@@ -1,0 +1,26 @@
+<header id="header">
+   <div class="inner">
+      <!-- Logo -->
+      <a href="index.html" class="logo">
+         <span class="symbol"><img src="{{ url_for('static', filename='assets/images/logo.svg') }}" alt="" /></span>
+         <span class="title">Phantom</span>
+      </a>
+      <!-- Nav -->
+      <nav>
+         <ul>
+            <li><a href="#menu">Menu</a></li>
+         </ul>
+      </nav>
+   </div>
+</header>
+
+<nav id="menu">
+   <h2>Menu</h2>
+   <ul>
+      <li><a href="{{ url_for('index') }}">Home</a></li>
+      <li><a href="{{ url_for('generic') }}">Ipsum veroeros</a></li>
+      <li><a href="{{ url_for('generic') }}">Tempus etiam</a></li>
+      <li><a href="{{ url_for('generic') }}">Consequat dolor</a></li>
+      <li><a href="{{ url_for('elements') }}">Elements</a></li>
+   </ul>
+</nav>

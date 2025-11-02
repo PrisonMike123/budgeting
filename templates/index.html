@@ -1,0 +1,99 @@
+<!DOCTYPE HTML>
+<!--
+	Phantom by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Phantom by HTML5 UP</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="static/css/main.css" />
+		<script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+		<noscript><link rel="stylesheet" href="static/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+		<!-- Wrapper -->
+			<div id="wrapper">
+				{% include 'header.html' %}
+
+				<!-- Main -->
+					<div id="main">
+						<div class="inner">
+							<header>
+								<h1>“Smart Budgeting with AI Assistance.<br />
+								Enter your monthly income, get personalized budget recommendations, and track your spending easily.” <a href="http://html5up.net">HTML5 UP</a>.</h1>
+								<p>“Smart Budgeting with AI Assistance. Enter your monthly income, get personalized budget recommendations, and track your spending easily.”</p>
+							</header>
+<!--							<section class="tiles">-->
+<!--								<article class="style1">-->
+<!--									<span class="image">-->
+<!--										<img src="static/assets/images/pic01.jpg" alt="" />-->
+<!--									</span>-->
+<!--									<a href="generic.html">-->
+<!--										<h2>Magna</h2>-->
+<!--										<div class="content">-->
+<!--											<p>Sed nisl arcu euismod sit amet nisi lorem etiam dolor veroeros et feugiat.</p>-->
+<!--										</div>-->
+<!--									</a>-->
+<!--								</article>-->
+								<section>
+								<section>
+								  <h2>Create your ideal Budget:</h2>
+								  <form method="post" action="#">
+									<div class="row gtr-uniform">
+									  <div class="col-6 col-12-xsmall">
+										<label for="monthly_income">Monthly Income</label>
+										<input type="number" name="monthly_income" id="monthly_income" placeholder="Enter your monthly income" required min="0" step="0.01" />
+									  </div>
+									  <div class="col-6 col-12-xsmall">
+										<label for="age_range">Age Range</label>
+										<select name="age_range" id="age_range" required>
+										  <option value="" disabled selected>Select your age range</option>
+										  <option value="18-24">18-24</option>
+										  <option value="25-34">25-34</option>
+										  <option value="35-44">35-44</option>
+										  <option value="45-54">45-54</option>
+										  <option value="55+">55+</option>
+										</select>
+									  </div>
+									  <div class="col-6 col-12-xsmall">
+										<label for="family_size">Family Size</label>
+										<select name="family_size" id="family_size" required>
+										  <option value="" disabled selected>Select family size</option>
+										  <option value="1">1 (Just Me)</option>
+										  <option value="2">2</option>
+										  <option value="3-4">3-4</option>
+										  <option value="5+">5 or more</option>
+										</select>
+									  </div>
+									  <div class="col-6 col-12-xsmall">
+										<label for="location">Location (City or Region)</label>
+										<input type="text" name="location" id="location" placeholder="Enter your city or region" required />
+									  </div>
+									  <div class="col-12">
+										<ul class="actions">
+										  <li><input type="submit" value="Create budget" class="primary" /></li>
+										</ul>
+									  </div>
+									</div>
+								  </form>
+								</section>
+
+
+							</section>
+						</div>
+					</div>
+
+				{% include 'footer.html' %}
+
+		<!-- Scripts -->
+			<script src="static/js/jquery.min.js"></script>
+			<script src="static/js/browser.min.js"></script>
+			<script src="static/js/breakpoints.min.js"></script>
+			<script src="static/js/util.js"></script>
+			<script src="static/js/main.js"></script>
+
+	</body>
+</html>
