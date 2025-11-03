@@ -1,93 +1,147 @@
-# OakLedger
+<div align="center">
+
+# 🌳 OakLedger
+
+</div>
 
 <div align="center">
 
-<img src="https://img.shields.io/badge/OakLedger-Personal%20Finance%20Assistant-0f172a?style=for-the-badge&logo=python&logoColor=3776AB" alt="OakLedger Banner">
+[![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white&style=for-the-badge)](https://www.python.org/)
+[![Flask](https://img.shields.io/badge/Flask-2.x-000000?logo=flask&logoColor=white&style=for-the-badge)](https://flask.palletsprojects.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
-### Smart Personal Finance on the Web — Built with Flask + Jinja + Chart.js  
+### Your Personal Finance Command Center  
 #### Budgeting • Financial Health • Goals • Credit/Debt • Investment Guidance
 
----
-
-OakLedger is a lightweight Flask web app that helps you:
-
-- Analyze your financial health from income and expenses.
-- Get India‑context budget recommendations (age, family, location sensitivity).
-- Plan goals and track progress automatically.
-- Review credit/debt metrics and get actionable advice.
-- Explore low‑risk vs growth Investment Guidance.
-
-
-[![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white&style=flat-square)](https://www.python.org/)
-[![Flask](https://img.shields.io/badge/Flask-2.x-000000?logo=flask&logoColor=white&style=flat-square)](https://flask.palletsprojects.com/)
-[![Jinja](https://img.shields.io/badge/Jinja2-Templating-B41717?logo=jinja&logoColor=white&style=flat-square)](https://palletsprojects.com/p/jinja/)
-[![Chart.js](https://img.shields.io/badge/Chart.js-Visualizations-FF6384?logo=chartdotjs&logoColor=white&style=flat-square)](https://www.chartjs.org/)
+<img src="https://img.shields.io/badge/Status-Active-success?style=flat-square" alt="Project Status"> 
+<img src="https://img.shields.io/badge/Version-1.0.0-blue?style=flat-square" alt="Version"> 
+<img src="https://img.shields.io/badge/Contributions-Welcome-brightgreen?style=flat-square" alt="Contributions Welcome">
 
 </div>
 
 ---
 
-## Features
+## 🚀 Features
 
-- **Budget Recommendations (India‑context)**
-  - Location cost‑of‑living tiers, age range, family size, income tier.
-  - Percent allocations with currency amounts and a pie chart.
+### 📊 Smart Budgeting
+- Personalized budget recommendations based on Indian cost of living
+- Visual spending breakdown with interactive charts
+- Age and family-size aware financial planning
 
-- **Financial Health**
-  - Health score and status with metrics (savings rate, expense ratio).
-  - Targeted recommendations by category.
+### 💪 Financial Health Score
+- Comprehensive financial health assessment
+- Actionable insights and improvement recommendations
+- Progress tracking over time
 
-- **Goals Planner**
-  - Add goals with target amount/date; feasibility and progress tracking.
+### 🎯 Goals & Planning
+- Set and track financial goals
+- Automated progress calculations
+- Visual goal tracking with milestones
 
-- **Credit & Debt Advisor**
-  - Inputs like debt, payment, interest, utilization, inquiries.
-  - Suggestions to improve credit profile and debt management.
+### 💳 Credit & Debt Management
+- Credit score simulator
+- Debt repayment strategies
+- Credit utilization optimization
 
-- **Investment Guidance (New)**
-  - Simple split into Low‑Risk vs Growth buckets.
-  - Age/savings‑rate‑aware risk profile. Short‑term goal nudges.
-  - Concrete instruments (e.g., Liquid/Overnight, FD, PPF/EPF, Nifty Index, ELSS, NPS).
-
-- **Sample Profiles**
-  - Pre‑filled data to preview working of the website and taking reference.
-
----
-
-## Tech Stack
-
-- Backend: Flask + Python
-- Templating: Jinja2
-- UI: HTML5UP Phantom theme (custom darkened styles)
-- Charts: Chart.js
-- Storage: Flask session (no DB)
-- Styling: Custom CSS, Font Awesome via CDN
+### 📈 Investment Guidance
+- Personalized investment portfolio suggestions
+- Risk assessment based on age and goals
+- India-specific investment instruments
 
 ---
 
-## Project Structure
+## 🛠️ Tech Stack
 
-```text
-c:\OakLedger
- ┣ static/
- ┃ ┣ css/
- ┃ ┃ ┣ main.css
- ┃ ┃ ┗ noscript.css
- ┃ ┣ js/
- ┃ ┗ assets/
- ┣ templates/
- ┃ ┣ header.html
- ┃ ┣ footer.html
- ┃ ┣ index.html
- ┃ ┣ generic.html
- ┃ ┣ goals.html
- ┃ ┣ credit.html
- ┃ ┗ investment.html
- ┣ budget_calc.py
- ┣ financial_analyzer.py
- ┣ credit_advisor.py
- ┣ goal_planner.py
- ┣ investment_advisor.py
- ┣ sample_profiles.py
- ┣ main.py
- ┗ README.md
+### Backend
+- **Python 3.11+**
+- **Flask** - Web framework
+- **Jinja2** - Templating engine
+
+### Frontend
+- **Chart.js** - Interactive data visualization
+- **HTML5UP Phantom** - Responsive theme
+- **Custom CSS** - Dark mode styling
+
+### Development Tools
+- **Git** - Version control
+- **GitHub** - Code hosting
+- **PEP 8** - Code style
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Python 3.11+
+- pip (Python package manager)
+
+### Installation
+```bash
+# Clone the repository
+git clone [https://github.com/yourusername/OakLedger.git](https://github.com/yourusername/OakLedger.git)
+cd OakLedger
+
+# Create and activate virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run the application
+python main.py
+
+```
+---
+## 📂 Project Structure
+```
+OakLedger/
+├── static/                 # Static files
+│   ├── assets/             # Images and icons
+│   ├── css/                # Stylesheets
+│   └── js/                 # JavaScript files
+├── templates/              # HTML templates
+│   ├── components/         # Reusable components
+│   ├── credit.html         # Credit advisor
+│   ├── elements.html       # UI elements
+│   ├── footer.html         # Site footer
+│   ├── generic.html        # Generic pages
+│   ├── goals.html          # Goals planner
+│   ├── header.html         # Site header
+│   ├── index.html          # Homepage
+│   └── investment.html     # Investment guidance
+├── budget_calc.py          # Budget calculations
+├── credit_advisor.py       # Credit management
+├── financial_analyzer.py   # Financial health
+├── goal_planner.py         # Goals tracking
+├── investment_advisor.py   # Investment advice
+├── main.py                 # Application entry
+└── sample_profiles.py      # Sample user profiles
+```
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions! Here's how you can help:
+
+1. **Fork** the repository
+2. **Create** your feature branch: `git checkout -b feature/AmazingFeature`
+3. **Commit** your changes: `git commit -m 'Add some AmazingFeature'`
+4. **Push** to the branch: `git push origin feature/AmazingFeature`
+5. **Open** a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+<div align="center">
+Made with ❤️ by Abhinav Nair and Achintya Manoj
+</div>
+
+<div align="center" style="margin-top: 5px;">
+  <a href="https://github.com/abhirajnair" target="_blank">Abhinav Nair</a> • 
+  <a href="https://github.com/PrisonMike123" target="_blank">Achintya Manoj</a>
+</div>
