@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, session, redirect, url_for, jsonify,Response
+import os
+from flask import Flask, render_template, request, session, redirect, url_for, jsonify, Response
 import datetime
 from budget_calc import calculate_advanced_budget_recommendations
 from financial_analyzer import calculate_financial_health
@@ -8,9 +9,29 @@ from sample_profiles import SAMPLE_PROFILES
 from investment_advisor import generate_investment_guidance
 import csv
 import io
+from functools import wraps
 
-app = Flask(__name__)
-app.secret_key = 'your-secret-key-here'  # Needed for sessions
+# Initialize Flask app
+app = Flask(__name__, static_folder='static')
+
+# Configuration
+app.config.update(
+    SECRET_KEY=os.environ.get('SECRET_KEY', 'dev-secret-key-123'),
+    SESSION_COOKIE_SECURE=True,
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE='Lax',
+    PERMANENT_SESSION_LIFETIME=datetime.timedelta(hours=1)
+)
+
+# Security headers middleware
+@app.after_request
+def add_security_headers(response):
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+    response.headers['X-XSS-Protection'] = '1; mode=block'
+    if 'Cache-Control' not in response.headers:
+        response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    return response
 
 @app.route("/load_sample/<profile_id>")
 def load_sample(profile_id):
@@ -320,5 +341,19 @@ def invest():
         guidance=guidance,
     )
 
+# Error handlers
+@app.errorhandler(404)
+def not_found_error(error):
+    return render_template('404.html'), 404
+
+@app.errorhandler(500)
+def internal_error(error):
+    return render_template('500.html'), 500
+
+# This is required for Vercel
+def app_handler(environ, start_response):
+    return app(environ, start_response)
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)
