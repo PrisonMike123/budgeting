@@ -209,6 +209,60 @@ def credit():
     
     return render_template("credit.html", year=year, credit_inputs=session.get('credit_inputs'))
 
+@app.route("/download-csv")
+def download_csv():
+    
+    budget_data = session.get('budget_data', {})
+    recommendations = session.get('recommendations', {})
+
+    if not recommendations:
+        return redirect(url_for('index'))
+
+    
+    output = io.StringIO()
+    writer = csv.writer(output)
+
+    
+    writer.writerow(['Personalized Budget Report'])
+    writer.writerow([f'Generated on: {datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'])
+    writer.writerow([])
+
+    
+    writer.writerow(['USER PROFILE'])
+    writer.writerow(['Monthly Income', f'₹{budget_data.get("monthly_income", 0):,.0f}'])
+    writer.writerow(['Age Range', budget_data.get('age_range', 'Not specified')])
+    writer.writerow(['Family Size', budget_data.get('family_size', 'Not specified')])
+    writer.writerow(['Location', budget_data.get('location', 'Not specified')])
+    writer.writerow([])
+
+    
+    writer.writerow(['BUDGET RECOMMENDATIONS'])
+    writer.writerow(['Category', 'Percentage', 'Amount (₹)'])
+
+    
+    total_amount = 0
+    for category, data in recommendations.items():
+        writer.writerow([
+            category,
+            data.get('display_percentage', '0%'),
+            data.get('display_amount', '₹0')
+        ])
+        total_amount += data.get('amount', 0)
+
+    
+    writer.writerow(['TOTAL', '100%', f'₹{total_amount:,.0f}'])
+
+    output.seek(0)
+    response = Response(
+        output.getvalue(),
+        mimetype="text/csv",
+        headers={
+            "Content-Disposition": f"attachment; filename=budget_report_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+        }
+    )
+
+    return response
+
 @app.route("/invest", methods=['GET'])
 def invest():
     year = get_current_year()
