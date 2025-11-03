@@ -17,9 +17,34 @@
 					<div id="main">
 						<div class="inner">
 							<header>
-								<h1>Your Personalized Budget Plan</h1>
-								<p>Based on your income, age, family size, and location, here's your ideal budget allocation:</p>
+								<h1>Your Financial Health Analysis</h1>
+								<p>Based on your income and expenses, here's a detailed analysis of your financial health:</p>
 							</header>
+							
+							<!-- Financial Health Score -->
+							<section>
+								<div class="box">
+									<h2>Financial Health Score: {{ budget_data.financial_health.health_score }}/100</h2>
+									<p>Status: <strong>{{ budget_data.financial_health.status }}</strong></p>
+									
+									<h3>Key Metrics:</h3>
+									<ul>
+										<li>Savings Rate: {{ budget_data.financial_health.metrics.savings_rate }}%</li>
+										<li>Expense to Income Ratio: {{ budget_data.financial_health.metrics.expense_to_income_ratio }}%</li>
+										<li>Monthly Savings: ${{ budget_data.financial_health.metrics.monthly_savings }}</li>
+									</ul>
+									
+									<h3>Recommendations:</h3>
+									<ul>
+										{% for rec in budget_data.financial_health.recommendations %}
+										<li>
+											<strong>{{ rec.category }}</strong> (Priority: {{ rec.priority }})<br>
+											{{ rec.suggestion }}
+										</li>
+										{% endfor %}
+									</ul>
+								</div>
+							</section>
 
 							<section>
 								<!-- User Information -->

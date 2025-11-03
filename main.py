@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, session, redirect, url_for
 import datetime
 from budget_calc import calculate_advanced_budget_recommendations
+from financial_analyzer import calculate_financial_health
 
 app = Flask(__name__)
 app.secret_key = 'your-secret-key-here'  # Needed for sessions
@@ -21,13 +22,29 @@ def index():
         age_range = request.form.get('age_range', '')
         family_size = request.form.get('family_size', '')
         location = request.form.get('location', '')
+        
+        # Get expense data
+        expenses = {
+            'housing': float(request.form.get('housing_expense', 0)),
+            'transportation': float(request.form.get('transportation_expense', 0)),
+            'food': float(request.form.get('food_expense', 0)),
+            'utilities': float(request.form.get('utilities_expense', 0)),
+            'healthcare': float(request.form.get('healthcare_expense', 0)),
+            'debt_payments': float(request.form.get('debt_expense', 0)),
+            'discretionary': float(request.form.get('discretionary_expense', 0))
+        }
 
+        # Calculate financial health
+        financial_health = calculate_financial_health(monthly_income, expenses)
+        
         # Store form data in session
         session['budget_data'] = {
             'monthly_income': monthly_income,
             'age_range': age_range,
             'family_size': family_size,
-            'location': location
+            'location': location,
+            'expenses': expenses,
+            'financial_health': financial_health
         }
 
         # Calculate budget recommendations and store in session
