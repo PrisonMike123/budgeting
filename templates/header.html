@@ -1,9 +1,8 @@
 <header id="header">
    <div class="inner">
       <!-- Logo -->
-      <a href="index.html" class="logo">
-         <span class="symbol"><img src="{{ url_for('static', filename='assets/images/OakLedger_icon.png') }}" alt="" /></span>
-         <span class="title">OakLedger</span>
+      <a href="{{ url_for('index') }}" class="logo" style="display: flex; align-items: center;">
+         <img src="{{ url_for('static', filename='assets/images/OakLedger_Logo.png') }}" alt="OakLedger" style="height: 80px; width: auto;">
       </a>
       <!-- Nav -->
       <nav>
