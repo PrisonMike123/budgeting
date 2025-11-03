@@ -5,7 +5,7 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
-		<script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 		<noscript><link rel="stylesheet" href="{{ url_for('static', filename='css/noscript.css') }}" /></noscript>
 	</head>
 	<body class="is-preload">
@@ -137,7 +137,7 @@
 		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 		<script>
 		document.addEventListener('DOMContentLoaded', function() {
-			const chartData = {{ chart_data|tojson|safe }};
+			const chartData = JSON.parse('{{ chart_data|tojson|safe }}');
 
 			if (chartData) {
 				const ctx = document.getElementById('budgetChart').getContext('2d');
