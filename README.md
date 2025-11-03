@@ -17,15 +17,11 @@ OakLedger is a lightweight Flask web app that helps you:
 - Review credit/debt metrics and get actionable advice.
 - Explore low‑risk vs growth Investment Guidance.
 
- Practical, actionable insights.  
- Session‑based, no database required.  
- Clean UI using an adapted HTML5UP theme.
 
 [![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white&style=flat-square)](https://www.python.org/)
 [![Flask](https://img.shields.io/badge/Flask-2.x-000000?logo=flask&logoColor=white&style=flat-square)](https://flask.palletsprojects.com/)
 [![Jinja](https://img.shields.io/badge/Jinja2-Templating-B41717?logo=jinja&logoColor=white&style=flat-square)](https://palletsprojects.com/p/jinja/)
 [![Chart.js](https://img.shields.io/badge/Chart.js-Visualizations-FF6384?logo=chartdotjs&logoColor=white&style=flat-square)](https://www.chartjs.org/)
-[![License](https://img.shields.io/badge/License-?-yellow?style=flat-square)](#-license)
 
 </div>
 
@@ -54,7 +50,7 @@ OakLedger is a lightweight Flask web app that helps you:
   - Concrete instruments (e.g., Liquid/Overnight, FD, PPF/EPF, Nifty Index, ELSS, NPS).
 
 - **Sample Profiles**
-  - Pre‑filled data via `/load_sample/<profile_id>` to test quickly.
+  - Pre‑filled data to preview working of the website and taking reference.
 
 ---
 
