@@ -3588,3 +3588,62 @@ form select option {
 
 		}
 
+
+/* === OakLedger Visual Polish Overrides (non-destructive) === */
+/* Typography refinement */
+h1, h2, h3 { letter-spacing: 0.02em; }
+p { color: #d1d5db; }
+
+/* Buttons */
+.button, button, input[type="submit"], .button.primary {
+  border-radius: 10px !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  transition: transform .06s ease, box-shadow .2s ease !important;
+}
+.button:hover, button:hover, input[type="submit"]:hover, .button.primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(114, 239, 221, 0.2);
+}
+.button:active { transform: translateY(0); }
+
+/* Cards/boxes */
+.box {
+  border-radius: 14px !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  backdrop-filter: blur(6px);
+}
+
+/* Forms */
+input, select, textarea {
+  border-radius: 10px !important;
+  border: 1px solid #374151 !important;
+}
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: #72efdd !important;
+  box-shadow: 0 0 0 3px rgba(114, 239, 221, 0.25);
+}
+label { color: #e5e7eb; }
+
+/* Tables */
+table { border-radius: 12px; overflow: hidden; }
+table thead { background: rgba(255,255,255,0.04); }
+table tbody tr:nth-child(odd) { background: rgba(255,255,255,0.02); }
+table tbody tr:hover { background: rgba(114, 239, 221, 0.05); }
+table td, table th { border-color: rgba(255,255,255,0.06) !important; }
+
+/* Header / Menu */
+#header { background: linear-gradient(180deg, rgba(18,18,18,0.8), rgba(18,18,18,0.3)); }
+#menu h2 { color: #e5e7eb; }
+#menu a { color: #d1d5db !important; }
+#menu a:hover { color: #72efdd !important; }
+
+/* Links */
+a { border-bottom-color: rgba(100, 216, 219, 0.35) !important; }
+a:hover { color: #72efdd !important; }
+
+/* Utility */
+.muted { color: #9ca3af !important; }
+.success { color: #34d399 !important; }
+.warning { color: #fbbf24 !important; }
+.danger { color: #f87171 !important; }
