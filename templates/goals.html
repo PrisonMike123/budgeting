@@ -85,6 +85,14 @@
                             <!-- Existing Goals -->
                             <section>
                                 {% if goals %}
+                                    <div class="box" style="margin-bottom: 1.5rem;">
+                                        <form method="post" action="{{ url_for('goals') }}">
+                                            <input type="hidden" name="action" value="clear" />
+                                            <ul class="actions">
+                                                <li><input type="submit" value="Clear All Goals" class="button" /></li>
+                                            </ul>
+                                        </form>
+                                    </div>
                                     {% for goal in goals %}
                                         <div class="box">
                                             <h3>{{ goal.name }}</h3>

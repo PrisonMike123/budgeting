@@ -103,6 +103,11 @@ def goals():
     year = get_current_year()
     
     if request.method == 'POST':
+        # Clear all goals if requested
+        if request.form.get('action') == 'clear':
+            session['goals'] = []
+            return redirect(url_for('goals'))
+
         # Get goal data
         goal_data = {
             'name': request.form.get('goal_name'),
