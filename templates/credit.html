@@ -1,0 +1,135 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Credit & Debt Advisor - OakLedger</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" crossorigin="anonymous" />
+		<noscript><link rel="stylesheet" href="{{ url_for('static', filename='css/noscript.css') }}" /></noscript>
+	</head>
+	<body class="is-preload">
+		<div id="wrapper">
+			{% include 'header.html' %}
+
+			<div id="main">
+				<div class="inner">
+					<header>
+						<h1>Credit & Debt Advisor</h1>
+						<p>Get suggestions for managing loans and improving credit.</p>
+					</header>
+
+					<section>
+						<div class="box">
+							<h3>Enter Your Details</h3>
+							<form method="post" action="{{ url_for('credit') }}">
+								<div class="row gtr-uniform">
+									<div class="col-6 col-12-xsmall">
+										<label for="total_debt">Total Outstanding Debt (₹)</label>
+										<input type="number" step="0.01" min="0" name="total_debt" id="total_debt" value="{{ credit_inputs.total_debt if credit_inputs }}" required />
+									</div>
+									<div class="col-6 col-12-xsmall">
+										<label for="monthly_debt_payment">Current Monthly Debt Payment (₹)</label>
+										<input type="number" step="0.01" min="0" name="monthly_debt_payment" id="monthly_debt_payment" value="{{ credit_inputs.monthly_debt_payment if credit_inputs }}" required />
+									</div>
+
+									<div class="col-6 col-12-xsmall">
+										<label for="avg_interest_rate">Average Interest Rate (% APR)</label>
+										<input type="number" step="0.01" min="0" max="100" name="avg_interest_rate" id="avg_interest_rate" value="{{ credit_inputs.avg_interest_rate if credit_inputs }}" required />
+									</div>
+									<div class="col-6 col-12-xsmall">
+										<label for="credit_utilization_pct">Credit Utilization (% of limits used)</label>
+										<input type="number" step="0.1" min="0" max="100" name="credit_utilization_pct" id="credit_utilization_pct" value="{{ credit_inputs.credit_utilization_pct if credit_inputs }}" required />
+									</div>
+
+									<div class="col-6 col-12-xsmall">
+										<label for="on_time_payment_pct">On-time Payment History (%)</label>
+										<input type="number" step="0.1" min="0" max="100" name="on_time_payment_pct" id="on_time_payment_pct" value="{{ credit_inputs.on_time_payment_pct if credit_inputs }}" required />
+									</div>
+									<div class="col-6 col-12-xsmall">
+										<label for="open_credit_lines">Open Credit Lines (count)</label>
+										<input type="number" step="1" min="0" name="open_credit_lines" id="open_credit_lines" value="{{ credit_inputs.open_credit_lines if credit_inputs }}" required />
+									</div>
+
+									<div class="col-6 col-12-xsmall">
+										<label for="hard_inquiries_12m">Hard Inquiries (last 12 months)</label>
+										<input type="number" step="1" min="0" name="hard_inquiries_12m" id="hard_inquiries_12m" value="{{ credit_inputs.hard_inquiries_12m if credit_inputs }}" required />
+									</div>
+
+									<div class="col-12">
+										<ul class="actions">
+											<li><input type="submit" value="Analyze" class="primary" /></li>
+										</ul>
+									</div>
+								</div>
+							</form>
+						</div>
+					</section>
+
+					{% if analysis %}
+					<section>
+						<div class="box">
+							<h3>Results</h3>
+							<p><strong>Recommended Strategy:</strong> {{ analysis.payoff_strategy|capitalize }} — {{ analysis.strategy_reason }}</p>
+							<p><strong>Estimated Months to Payoff:</strong> {{ analysis.estimated_months_to_payoff if analysis.estimated_months_to_payoff is not none else 'Increase monthly payment (insufficient to amortize)' }}</p>
+
+							<div class="row">
+								<div class="col-6 col-12-small">
+									<h4>Utilization</h4>
+									<ul>
+										{% for tip in analysis.utilization_advice %}
+										<li>{{ tip }}</li>
+										{% endfor %}
+									</ul>
+								</div>
+								<div class="col-6 col-12-small">
+									<h4>Payment History</h4>
+									<ul>
+										{% for tip in analysis.payment_history_advice %}
+										<li>{{ tip }}</li>
+										{% endfor %}
+									</ul>
+								</div>
+								<div class="col-6 col-12-small">
+									<h4>Credit Mix</h4>
+									<ul>
+										{% for tip in analysis.credit_mix_advice %}
+										<li>{{ tip }}</li>
+										{% endfor %}
+									</ul>
+								</div>
+								<div class="col-6 col-12-small">
+									<h4>Inquiries</h4>
+									<ul>
+										{% for tip in analysis.inquiries_advice %}
+										<li>{{ tip }}</li>
+										{% endfor %}
+									</ul>
+								</div>
+							</div>
+
+							<h4>General Recommendations</h4>
+							<ul>
+								{% for tip in analysis.general_recommendations %}
+								<li>{{ tip }}</li>
+								{% else %}
+								<li>No additional recommendations at this time.</li>
+								{% endfor %}
+							</ul>
+						</div>
+					</section>
+					{% endif %}
+
+				</div>
+			</div>
+
+			{% include 'footer.html' %}
+		</div>
+
+		<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/browser.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/breakpoints.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/util.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+	</body>
+</html>

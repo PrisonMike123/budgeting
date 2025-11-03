@@ -3,6 +3,7 @@ import datetime
 from budget_calc import calculate_advanced_budget_recommendations
 from financial_analyzer import calculate_financial_health
 from goal_planner import calculate_goal_feasibility, track_goal_progress
+from credit_advisor import analyze_credit_and_debt
 from sample_profiles import SAMPLE_PROFILES
 
 app = Flask(__name__)
@@ -161,6 +162,51 @@ def elements():
     year = get_current_year()
     return render_template("elements.html", year=year)
 
+@app.route("/credit", methods=['GET', 'POST'])
+def credit():
+    year = get_current_year()
+    
+    if request.method == 'POST':
+        # Get credit and debt inputs
+        total_debt = float(request.form.get('total_debt', 0))
+        monthly_debt_payment = float(request.form.get('monthly_debt_payment', 0))
+        avg_interest_rate = float(request.form.get('avg_interest_rate', 0))
+        credit_utilization_pct = float(request.form.get('credit_utilization_pct', 0))
+        on_time_payment_pct = float(request.form.get('on_time_payment_pct', 0))
+        open_credit_lines = int(request.form.get('open_credit_lines', 0))
+        hard_inquiries_12m = int(request.form.get('hard_inquiries_12m', 0))
+
+        # Analyze credit and debt
+        analysis = analyze_credit_and_debt(
+            total_debt,
+            monthly_debt_payment,
+            avg_interest_rate,
+            credit_utilization_pct,
+            on_time_payment_pct,
+            open_credit_lines,
+            hard_inquiries_12m,
+        )
+
+        # Store analysis and inputs in session
+        session['credit_inputs'] = {
+            'total_debt': total_debt,
+            'monthly_debt_payment': monthly_debt_payment,
+            'avg_interest_rate': avg_interest_rate,
+            'credit_utilization_pct': credit_utilization_pct,
+            'on_time_payment_pct': on_time_payment_pct,
+            'open_credit_lines': open_credit_lines,
+            'hard_inquiries_12m': hard_inquiries_12m,
+        }
+        session['credit_analysis'] = analysis
+
+        return render_template(
+            "credit.html",
+            year=year,
+            analysis=analysis,
+            credit_inputs=session.get('credit_inputs')
+        )
+    
+    return render_template("credit.html", year=year, credit_inputs=session.get('credit_inputs'))
 
 if __name__ == "__main__":
     app.run(debug=True)
