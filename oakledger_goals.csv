@@ -1,0 +1,403 @@
+user_id,goal_name,goal_amount,time_horizon,priority_level,current_saved_amount
+user_1,Child Education,9031661,16,Low,1327119
+user_1,Retirement,1683883,17,Low,917736
+user_1,Emergency Fund,1509997,20,Medium,706412
+user_2,Buy House,9176368,17,Medium,3740268
+user_2,Emergency Fund,8072413,12,Medium,2516564
+user_3,Retirement,5052112,3,Low,3302660
+user_3,Emergency Fund,5301462,10,High,2531872
+user_4,Emergency Fund,3036678,3,Low,2108119
+user_4,Child Education,657985,17,High,115866
+user_4,Child Education,1489534,10,High,699304
+user_5,Buy House,4511001,5,Low,923710
+user_5,Vacation,2735634,13,High,702378
+user_6,Vacation,4162709,7,Low,2569260
+user_6,Buy House,5952034,6,Low,3930516
+user_6,Vacation,2786212,15,Medium,676404
+user_7,Retirement,3006547,20,Low,1819261
+user_7,Child Education,1111435,5,High,222910
+user_8,Child Education,8189846,17,Low,5478606
+user_8,Retirement,9134217,14,Low,4780527
+user_9,Retirement,4606118,18,Medium,493397
+user_9,Vacation,7729960,12,Low,3940160
+user_10,Emergency Fund,1833502,13,Medium,854946
+user_11,Child Education,4773311,10,Medium,2775154
+user_11,Emergency Fund,4483960,14,Medium,2528463
+user_11,Emergency Fund,4256679,8,Low,1287407
+user_12,Child Education,3218500,19,High,1621098
+user_12,Buy House,1340044,15,High,556331
+user_12,Child Education,7681668,9,Low,2073883
+user_13,Buy House,771126,4,High,511336
+user_14,Emergency Fund,3837715,5,Low,2589219
+user_14,Emergency Fund,1649322,6,Medium,814496
+user_14,Retirement,9697058,5,Low,2041791
+user_15,Buy House,8034214,16,Medium,4512139
+user_15,Child Education,5625820,7,High,1498564
+user_16,Vacation,6622301,12,High,1688310
+user_17,Vacation,3185161,4,Medium,2190286
+user_17,Emergency Fund,3566669,14,High,1738002
+user_18,Emergency Fund,2613781,15,High,1224242
+user_19,Child Education,7608511,5,High,1093736
+user_20,Vacation,4404309,2,Medium,833791
+user_20,Buy House,214556,14,Medium,40973
+user_20,Vacation,5733643,20,High,2346378
+user_21,Vacation,8221848,14,Low,4674632
+user_21,Emergency Fund,1376077,9,High,455006
+user_22,Buy House,8287731,20,Low,5478400
+user_22,Child Education,6221650,11,Medium,828206
+user_22,Child Education,1721139,19,Medium,255200
+user_23,Retirement,5064699,7,Low,625990
+user_23,Retirement,6645196,11,Low,2219913
+user_24,Vacation,6227401,4,Low,2259240
+user_25,Buy House,2547853,8,High,1355059
+user_26,Vacation,4201116,14,High,2418345
+user_26,Vacation,5362867,19,Medium,3646452
+user_26,Buy House,475453,12,High,143887
+user_27,Vacation,918308,5,High,536533
+user_27,Vacation,8976491,19,High,4888874
+user_27,Buy House,4108850,3,Low,759949
+user_28,Vacation,519824,3,High,270713
+user_28,Buy House,2390059,7,Low,310647
+user_28,Buy House,5356264,16,Low,1084181
+user_29,Buy House,1273030,5,Medium,581757
+user_29,Buy House,3900592,8,Medium,1179562
+user_29,Child Education,6944585,5,Low,3094370
+user_30,Retirement,5595382,3,Low,1141842
+user_31,Child Education,2225773,6,Medium,447003
+user_32,Retirement,9484641,16,High,6216284
+user_32,Retirement,882814,5,Low,412685
+user_33,Vacation,462233,4,High,48227
+user_34,Vacation,4960225,17,Low,873671
+user_35,Emergency Fund,4745782,16,Medium,1155846
+user_36,Emergency Fund,831179,7,Low,332416
+user_37,Child Education,5253293,15,High,2283219
+user_38,Emergency Fund,2171454,5,Low,688657
+user_39,Retirement,8715120,16,Low,4319181
+user_39,Buy House,4837668,8,High,2796016
+user_39,Vacation,8159326,7,High,4096680
+user_40,Child Education,1106432,11,High,399204
+user_41,Buy House,7802555,5,Low,1025833
+user_41,Retirement,9215415,7,High,3603567
+user_42,Retirement,1388825,16,Low,621995
+user_43,Child Education,3534495,9,High,1045077
+user_43,Retirement,1845243,15,High,600293
+user_44,Vacation,1433623,20,Medium,190104
+user_45,Retirement,2631711,16,High,874776
+user_45,Vacation,2488489,8,Low,784258
+user_46,Child Education,3592535,6,High,1851328
+user_46,Child Education,1200789,6,High,733671
+user_47,Retirement,7216631,12,High,4559795
+user_47,Emergency Fund,2830468,7,Low,1930610
+user_48,Vacation,1650798,18,Medium,1019070
+user_49,Vacation,8143827,10,High,4381466
+user_50,Retirement,4338170,12,Medium,1942113
+user_50,Emergency Fund,2699296,2,Medium,1857414
+user_50,Vacation,872073,18,High,309951
+user_51,Buy House,8240805,16,Medium,2013285
+user_51,Buy House,9569856,15,High,1719006
+user_52,Buy House,4210801,2,Medium,2111386
+user_52,Vacation,2914601,20,Low,1312142
+user_53,Retirement,7980612,14,High,4580195
+user_53,Vacation,6414624,2,Low,913565
+user_54,Emergency Fund,5785238,3,Medium,2056891
+user_54,Emergency Fund,4726314,19,Low,2725605
+user_54,Emergency Fund,1558267,12,Low,1027437
+user_55,Buy House,6306747,5,Medium,2014088
+user_55,Child Education,885757,13,High,433050
+user_55,Emergency Fund,1324172,8,High,912025
+user_56,Buy House,9253553,17,Low,6139628
+user_57,Retirement,3719758,12,Medium,2376032
+user_57,Vacation,8648435,10,High,1193670
+user_57,Vacation,5991940,17,Low,2492704
+user_58,Emergency Fund,8088040,19,Medium,3002176
+user_59,Retirement,1301048,16,High,192688
+user_59,Child Education,3199964,4,High,636344
+user_60,Vacation,2682256,6,High,1106196
+user_61,Child Education,580679,15,Low,246708
+user_61,Vacation,2415051,13,Medium,884672
+user_61,Child Education,560413,8,High,63451
+user_62,Child Education,8917785,15,Low,2725948
+user_63,Vacation,5674513,20,Low,2940068
+user_63,Vacation,9401778,16,Medium,4140082
+user_63,Retirement,5342132,10,High,2086348
+user_64,Retirement,993880,13,Medium,371270
+user_64,Emergency Fund,2991109,7,Low,1259825
+user_65,Retirement,3142041,7,High,534620
+user_66,Retirement,9838932,16,Medium,3166201
+user_66,Emergency Fund,3641935,3,Low,1056767
+user_67,Child Education,2682092,16,Low,1837982
+user_67,Child Education,9153043,5,High,3137090
+user_68,Vacation,2639136,12,High,270714
+user_68,Emergency Fund,9362802,12,Low,4899281
+user_69,Emergency Fund,5062493,6,Low,2719198
+user_69,Child Education,7617300,5,Low,2950856
+user_70,Emergency Fund,2539134,5,Medium,291689
+user_71,Vacation,3897107,13,High,1152842
+user_71,Emergency Fund,3474069,18,High,1975946
+user_71,Retirement,4862844,2,High,2057213
+user_72,Emergency Fund,1665941,14,High,656846
+user_72,Buy House,8782482,13,Medium,1657848
+user_73,Vacation,6401361,13,High,1733426
+user_73,Child Education,6094759,16,Low,929811
+user_74,Vacation,7652780,16,Medium,1517349
+user_74,Vacation,7310724,6,Low,3353878
+user_74,Retirement,2609867,11,Medium,1808715
+user_75,Buy House,5827359,20,Medium,891988
+user_75,Child Education,7069609,15,High,3064593
+user_75,Retirement,9728054,8,High,5830706
+user_76,Vacation,9492345,3,Medium,5702537
+user_76,Vacation,5298837,19,Low,2003337
+user_77,Retirement,241048,10,Medium,162374
+user_78,Buy House,8127925,11,Medium,1687547
+user_78,Buy House,4306228,5,Medium,1704535
+user_78,Emergency Fund,1319456,13,Low,512334
+user_79,Vacation,4527037,5,Medium,1844838
+user_79,Buy House,9851323,10,High,4423172
+user_80,Vacation,5563359,6,Medium,1101463
+user_81,Vacation,6259317,13,High,1714513
+user_81,Buy House,9085420,18,High,5086613
+user_82,Emergency Fund,1785592,7,Low,524186
+user_83,Child Education,5251155,13,High,2208910
+user_83,Retirement,6099361,2,High,2506242
+user_84,Vacation,8335255,12,High,1345733
+user_84,Emergency Fund,2793001,9,High,1611740
+user_85,Emergency Fund,9018990,19,Low,4994573
+user_85,Vacation,2112044,16,High,358919
+user_85,Buy House,2401710,17,Medium,689156
+user_86,Vacation,2532267,18,Medium,514871
+user_86,Buy House,5311753,5,High,941395
+user_87,Retirement,2588393,11,High,584730
+user_87,Vacation,1518772,5,High,169015
+user_87,Vacation,8324448,3,High,1370957
+user_88,Emergency Fund,8814751,3,Medium,1510437
+user_88,Buy House,4444844,4,Medium,2224875
+user_88,Buy House,1819061,8,Low,1165481
+user_89,Buy House,6097756,4,High,3704490
+user_90,Child Education,9926613,13,High,6085836
+user_90,Emergency Fund,4257108,20,High,678853
+user_91,Emergency Fund,434617,8,Low,93412
+user_91,Retirement,4928772,19,High,3372009
+user_91,Retirement,1855671,18,Low,714117
+user_92,Vacation,3305895,5,High,1986331
+user_92,Vacation,6568883,8,Low,1553754
+user_92,Child Education,2093232,5,Medium,347874
+user_93,Child Education,8518412,11,Low,4542715
+user_94,Vacation,5704863,5,Medium,1541265
+user_95,Vacation,5434607,9,Low,1871512
+user_95,Retirement,7380005,4,Medium,4896258
+user_95,Retirement,6364643,2,Low,2513964
+user_96,Vacation,6849981,18,Low,3465482
+user_97,Vacation,2605308,14,Low,1183681
+user_98,Buy House,3030705,13,High,918846
+user_99,Buy House,6982844,9,Medium,3736662
+user_99,Emergency Fund,4872762,20,Medium,2698447
+user_99,Child Education,6914837,17,Low,3193958
+user_100,Emergency Fund,8329112,10,High,4670964
+user_100,Buy House,2012554,10,Medium,801730
+user_101,Buy House,2458353,5,Low,323793
+user_101,Vacation,1344687,2,High,443182
+user_101,Retirement,5685409,11,Low,2694540
+user_102,Vacation,8923295,16,High,2464059
+user_103,Emergency Fund,8425036,10,Low,2579488
+user_103,Emergency Fund,9268571,2,High,6436345
+user_104,Vacation,6636241,12,Medium,2425770
+user_105,Retirement,751295,19,Low,462960
+user_106,Vacation,2953883,15,High,849170
+user_106,Vacation,6727687,5,Low,3397581
+user_107,Emergency Fund,9490952,20,Medium,3659205
+user_107,Emergency Fund,2822462,3,Medium,728293
+user_107,Emergency Fund,6538393,13,Medium,1911105
+user_108,Retirement,956962,13,Medium,560523
+user_109,Child Education,651304,14,High,232443
+user_109,Vacation,6195607,13,High,3077631
+user_109,Retirement,4354272,11,Low,657343
+user_110,Child Education,1298911,5,Medium,262208
+user_110,Child Education,9233135,3,Medium,4567269
+user_110,Emergency Fund,7287921,18,Medium,1894651
+user_111,Emergency Fund,8080256,2,Medium,2639355
+user_111,Child Education,6748160,20,High,3947646
+user_111,Retirement,1878672,12,Medium,754589
+user_112,Retirement,5896526,11,Medium,4019406
+user_112,Vacation,3584948,4,Low,818974
+user_112,Buy House,4648564,11,Low,1586166
+user_113,Emergency Fund,1742796,5,Low,526504
+user_114,Emergency Fund,9703089,17,Medium,2191380
+user_115,Emergency Fund,5264152,11,Medium,2621937
+user_116,Vacation,3556734,14,Medium,1689372
+user_116,Emergency Fund,7803914,7,High,3720175
+user_117,Emergency Fund,3329604,17,High,1653094
+user_117,Child Education,8039914,19,Low,4917732
+user_117,Emergency Fund,7476689,3,Low,1647779
+user_118,Retirement,2678727,6,Low,1369322
+user_118,Vacation,5237789,15,Medium,3227062
+user_119,Vacation,3615137,10,Medium,1762833
+user_120,Vacation,4161601,9,High,790610
+user_120,Retirement,664798,11,Medium,260089
+user_121,Buy House,7280306,8,High,1919287
+user_121,Child Education,688919,10,Low,296527
+user_122,Vacation,908541,2,High,559434
+user_122,Child Education,1608104,11,High,1029741
+user_122,Child Education,7028441,4,Medium,4680220
+user_123,Retirement,2558208,5,Low,1383193
+user_123,Emergency Fund,2224047,20,Low,558424
+user_123,Retirement,1714123,5,Medium,510074
+user_124,Retirement,6742286,15,High,1257886
+user_124,Retirement,3138600,10,Medium,1082897
+user_124,Vacation,1138272,19,Medium,591640
+user_125,Emergency Fund,5509820,15,Medium,2808042
+user_126,Child Education,2631212,17,Low,843681
+user_126,Buy House,5370258,3,Low,2670812
+user_127,Child Education,4221093,19,Medium,1205380
+user_128,Buy House,6287698,19,High,3864346
+user_128,Buy House,6717462,14,Medium,1884469
+user_128,Child Education,4150370,8,High,2695808
+user_129,Vacation,5521470,3,Medium,3422576
+user_129,Vacation,8449220,15,Medium,4481733
+user_129,Retirement,1884358,10,Low,263472
+user_130,Child Education,9389346,16,Low,1093019
+user_130,Retirement,1074073,16,Low,195111
+user_131,Child Education,3556706,12,Low,531156
+user_131,Retirement,2847821,18,Low,1941641
+user_132,Emergency Fund,2382597,15,Medium,883691
+user_132,Child Education,2439922,7,Low,1112146
+user_132,Child Education,5695887,8,High,1986144
+user_133,Vacation,6801736,20,High,764793
+user_134,Emergency Fund,9570578,9,High,6550836
+user_135,Retirement,4591992,3,Medium,2161921
+user_136,Retirement,4564723,4,Medium,922411
+user_136,Buy House,9716756,2,Low,4037338
+user_136,Vacation,7811954,5,High,4125792
+user_137,Child Education,4666142,17,Medium,831131
+user_138,Child Education,3816607,8,Medium,794701
+user_139,Child Education,682732,10,High,321299
+user_140,Emergency Fund,6401492,16,High,679788
+user_141,Vacation,5623167,8,Low,1856192
+user_142,Buy House,4498752,5,Low,608462
+user_142,Retirement,5784506,17,Medium,4037838
+user_143,Buy House,963562,10,Low,454603
+user_143,Vacation,5275231,13,High,3591560
+user_143,Buy House,9587865,20,High,2456171
+user_144,Child Education,8468480,16,High,1302357
+user_144,Vacation,9099034,6,Medium,1547793
+user_144,Retirement,940918,17,Medium,516276
+user_145,Child Education,4946702,10,Low,1423691
+user_145,Child Education,2967969,17,High,1286332
+user_146,Buy House,7581800,8,High,1006410
+user_146,Buy House,3272601,17,Medium,648410
+user_146,Vacation,8037188,5,Medium,1000429
+user_147,Vacation,9609577,16,Medium,1609552
+user_147,Buy House,2683929,13,High,596477
+user_148,Retirement,3230887,18,Medium,1414962
+user_148,Emergency Fund,3763416,2,Low,2107922
+user_149,Buy House,7186351,9,Medium,3637336
+user_150,Child Education,635572,5,Medium,206011
+user_150,Child Education,1979557,6,High,294237
+user_151,Vacation,8250632,10,Low,4082444
+user_151,Buy House,5726866,16,Medium,3828130
+user_151,Retirement,9748894,8,High,5663472
+user_152,Buy House,5621907,4,Low,3773087
+user_152,Buy House,6598678,14,Medium,1364649
+user_153,Buy House,1696331,8,High,565051
+user_153,Child Education,6951088,6,High,1940243
+user_154,Emergency Fund,5402636,6,Medium,2697602
+user_154,Emergency Fund,6364902,8,Medium,2337609
+user_155,Child Education,8193331,20,Low,2899147
+user_155,Child Education,7288983,7,Medium,3487135
+user_156,Emergency Fund,878438,12,Medium,444370
+user_157,Vacation,2801637,18,Low,1368138
+user_157,Child Education,1608784,16,Medium,237312
+user_157,Child Education,8212989,6,High,4193457
+user_158,Emergency Fund,4371713,15,Medium,1928456
+user_158,Buy House,9444150,3,Low,1554312
+user_159,Buy House,7129315,16,Low,3794122
+user_159,Child Education,4451016,10,Low,663476
+user_160,Buy House,472943,16,High,270384
+user_160,Buy House,6792730,4,Medium,4252610
+user_160,Child Education,5193696,20,Low,1937243
+user_161,Emergency Fund,7748873,10,Medium,5269480
+user_161,Retirement,3340556,7,High,1831352
+user_161,Buy House,4550628,15,Low,503978
+user_162,Buy House,2157536,7,Low,833396
+user_162,Emergency Fund,6996309,17,Medium,3295959
+user_163,Vacation,6252024,11,High,1094440
+user_163,Retirement,432799,5,High,224025
+user_163,Buy House,3357826,8,Medium,1642561
+user_164,Vacation,4256398,19,High,645509
+user_164,Retirement,7974990,17,Medium,901892
+user_164,Retirement,2986787,16,Medium,1143621
+user_165,Retirement,4270650,11,Low,2552441
+user_165,Buy House,6772195,12,High,1094374
+user_166,Vacation,7444199,17,Low,3329022
+user_166,Child Education,9499686,3,Medium,3228071
+user_166,Emergency Fund,8812679,17,High,4658155
+user_167,Vacation,519096,20,Medium,224225
+user_167,Vacation,4693758,17,High,1862827
+user_167,Vacation,6017736,15,High,1184291
+user_168,Vacation,3424602,13,Medium,819377
+user_168,Emergency Fund,3885993,12,Low,2378509
+user_168,Retirement,8059576,11,Low,4246035
+user_169,Vacation,6244085,7,Low,1400705
+user_169,Vacation,1646060,6,High,361624
+user_170,Buy House,8457506,15,Medium,2386633
+user_170,Emergency Fund,3713701,3,High,1170826
+user_170,Child Education,4575632,7,High,2730596
+user_171,Buy House,736367,12,Medium,123991
+user_171,Buy House,4003231,19,High,1568543
+user_171,Child Education,5909692,3,Low,1539444
+user_172,Emergency Fund,8846766,5,Low,1152320
+user_173,Buy House,7869463,5,Low,3665545
+user_173,Emergency Fund,1909062,3,Low,311648
+user_174,Retirement,2180707,13,High,1171061
+user_174,Emergency Fund,7607441,17,Low,4734077
+user_174,Child Education,2788652,12,High,484640
+user_175,Vacation,7567017,2,High,4546930
+user_176,Child Education,5926400,18,High,895718
+user_176,Vacation,6448445,13,Low,3217756
+user_177,Vacation,9086057,9,High,5279555
+user_178,Vacation,7067070,18,Low,2240718
+user_178,Vacation,699339,6,High,371052
+user_179,Buy House,1367378,12,Medium,466263
+user_179,Vacation,2956910,3,Medium,1642609
+user_179,Emergency Fund,2732555,3,Low,1880075
+user_180,Child Education,8920433,15,Medium,5632983
+user_180,Child Education,9488041,12,Medium,993790
+user_180,Emergency Fund,4893941,6,Low,1675504
+user_181,Emergency Fund,3641570,16,Low,1118510
+user_181,Retirement,6986479,11,High,853623
+user_181,Vacation,5811860,6,Low,4040140
+user_182,Buy House,3785870,18,Low,1087875
+user_182,Retirement,5916146,2,High,3751970
+user_183,Retirement,4540101,11,Low,1605596
+user_183,Buy House,8677100,3,Medium,2220070
+user_183,Child Education,8714426,5,High,4827234
+user_184,Child Education,7728555,20,Low,797031
+user_185,Emergency Fund,4161055,20,Low,2648942
+user_185,Emergency Fund,9147098,9,Medium,2556806
+user_186,Retirement,9809414,14,Low,5321680
+user_186,Child Education,1965414,18,Low,423612
+user_186,Vacation,6261063,5,High,3299482
+user_187,Buy House,1574845,3,Medium,997043
+user_187,Retirement,8190200,16,High,2633776
+user_188,Emergency Fund,6957085,19,Low,3946718
+user_188,Emergency Fund,4624046,17,Low,1637159
+user_188,Vacation,7583316,15,High,1415105
+user_189,Vacation,8332997,6,Low,3399124
+user_190,Retirement,2180687,16,Medium,260733
+user_190,Emergency Fund,2831333,13,High,1305132
+user_190,Buy House,7055503,5,Medium,3126003
+user_191,Retirement,8970751,5,Medium,2538317
+user_192,Child Education,5287859,17,High,3039050
+user_192,Emergency Fund,2584710,15,High,1711317
+user_193,Retirement,4956043,7,Low,1949094
+user_193,Emergency Fund,2252321,13,High,1401520
+user_194,Emergency Fund,8272800,11,Low,3072722
+user_194,Vacation,5867733,17,Low,3521872
+user_195,Emergency Fund,2524018,16,Medium,1262848
+user_196,Buy House,5656223,15,Medium,1355759
+user_197,Emergency Fund,5887440,3,Low,3732789
+user_197,Buy House,4853581,7,Low,557591
+user_198,Emergency Fund,5381610,5,Low,2344292
+user_198,Emergency Fund,3428384,19,Low,1901276
+user_198,Emergency Fund,9767113,8,Medium,3922309
+user_199,Emergency Fund,2218016,7,High,587724
+user_200,Emergency Fund,4315227,16,High,2520751
