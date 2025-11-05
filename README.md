@@ -144,5 +144,5 @@ Made with ❤️ by Abhinav Nair, Achintya Manoj and Achintya Chaturvedi
 <div align="center" style="margin-top: 5px;">
   <a href="https://github.com/abhirajnair" target="_blank">Abhinav Nair</a> • 
   <a href="https://github.com/PrisonMike123" target="_blank">Achintya Manoj</a> •
-  <a href="https://github.com/Achintyaisagoat" target="_blank">Achintya Chaturvedi</a>
+  <a href="https://github.com/AchintyaisGOAT" target="_blank">Achintya Chaturvedi</a>
 </div>
