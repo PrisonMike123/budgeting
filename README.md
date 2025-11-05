@@ -138,10 +138,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 <div align="center">
-Made with ❤️ by Abhinav Nair and Achintya Manoj
+Made with ❤️ by Abhinav Nair, Achintya Manoj and Achintya Chaturvedi
 </div>
 
 <div align="center" style="margin-top: 5px;">
   <a href="https://github.com/abhirajnair" target="_blank">Abhinav Nair</a> • 
-  <a href="https://github.com/PrisonMike123" target="_blank">Achintya Manoj</a>
+  <a href="https://github.com/PrisonMike123" target="_blank">Achintya Manoj</a> •
+  <a href="https://github.com/Achintyaisagoat" target="_blank">Achintya Chaturvedi</a>
 </div>
