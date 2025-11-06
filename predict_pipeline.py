@@ -12,7 +12,8 @@ from visualizations import (
     create_confusion_matrix_heatmap,
     create_actual_vs_predicted_plot,
     create_metrics_bar_chart,
-    create_sample_predictions_table
+    create_sample_predictions_table,
+    create_methodology_visualizations
 )
 
 # -----------------------------
@@ -102,8 +103,10 @@ print(f"✅ Predictions saved to {output_file}\n")
 # -----------------------------
 # 8. Visualization setup
 # -----------------------------
-plot_dir = "plots"
+# Create output directories
+plot_dir = os.path.join('static', 'images', 'plots')
 os.makedirs(plot_dir, exist_ok=True)
+os.makedirs(os.path.join(plot_dir, 'user_plots'), exist_ok=True)
 
 # Convert to datetime for plotting
 if 'month' in df.columns:
@@ -115,34 +118,63 @@ else:
 users = df['user_id'].unique()
 
 # -----------------------------
-# 9. Plot individual user trends
+# 9. Generate individual user trend plots
 # -----------------------------
 print("📊 Generating individual user plots...")
 for user in users:
-    user_df = df[df['user_id'] == user].sort_values('month')
+    user_data = df[df['user_id'] == user]
     
-    plt.figure(figsize=(10, 5))
-    plt.plot(user_df['month'], user_df['savings'], marker='o', linestyle='-', label='Actual Savings')
-    plt.plot(user_df['month'], user_df['predicted_expense'], marker='x', linestyle='--', label='Predicted Expense')
-    plt.title(f"User {user}: Savings vs Predicted Expense")
-    plt.xlabel("Month")
-    plt.ylabel("Amount")
-    plt.xticks(rotation=45)
-    plt.legend()
-    plt.grid(alpha=0.3)
+    # Create a figure with two subplots
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 10))
+    
+    # Plot 1: Income vs Expenses
+    ax1.plot(user_data['month'], user_data['total_income'], 'g-', label='Income')
+    ax1.plot(user_data['month'], user_data['total_expenses'], 'r-', label='Expenses')
+    ax1.set_title(f'Monthly Income vs Expenses for {user}')
+    ax1.set_ylabel('Amount ($)')
+    ax1.legend()
+    ax1.grid(True, linestyle='--', alpha=0.3)
+    
+    # Plot 2: Savings Rate
+    ax2.plot(user_data['month'], user_data['savings_ratio']*100, 'b-', label='Savings Rate')
+    ax2.axhline(y=20, color='r', linestyle='--', label='Recommended (20%)')
+    ax2.set_title(f'Monthly Savings Rate for {user}')
+    ax2.set_xlabel('Month')
+    ax2.set_ylabel('Savings Rate (%)')
+    ax2.legend()
+    ax2.grid(True, linestyle='--', alpha=0.3)
+    
+    # Adjust layout and save
     plt.tight_layout()
-    plt.savefig(f"{plot_dir}/{user}_trend.png")
+    plt.savefig(os.path.join(plot_dir, f'{user}_trend.png'), dpi=300, bbox_inches='tight')
     plt.close()
 
 print("✅ Individual user plots saved.\n")
 
 # -----------------------------
-# 10. Model Evaluation
+# 11. Generate Visualizations
 # -----------------------------
-print("📈 Evaluating model performance...")
+print("📊 Generating visualizations...")
 
-# Add true labels if available (replace with your actual true labels if available)
+# 0. Methodology Visualizations
+print("\n📝 Creating methodology visualizations...")
+create_methodology_visualizations(save_path=plot_dir)
+
+# 1. Financial Health Pie Chart
 if 'financial_health' in df.columns:
+    create_financial_health_pie_chart(df, save_path=plot_dir)
+
+# 2. Income and Savings Histograms
+if all(col in df.columns for col in ['total_income', 'savings_ratio']):
+    create_income_savings_histograms(df, save_path=plot_dir)
+
+# 3. Correlation Heatmap
+numeric_cols = df.select_dtypes(include=[np.number]).columns
+if len(numeric_cols) > 0:
+    create_correlation_heatmap(df[numeric_cols], save_path=plot_dir)
+
+# 4. Confusion Matrix and Classification Report
+if 'financial_health' in df.columns and 'predicted_financial_health' in df.columns:
     # Generate classification report and convert to dict
     report = classification_report(
         df['financial_health'],
@@ -173,40 +205,25 @@ if 'financial_health' in df.columns:
         save_path=plot_dir
     )
 
-# Regression Metrics
-if 'total_expenses' in df.columns:
+# 5. Actual vs Predicted Values (for regression)
+if 'total_expenses' in df.columns and 'predicted_expense' in df.columns:
     print("\n=== Regression Metrics ===")
     mse = mean_squared_error(df['total_expenses'], df['predicted_expense'])
     r2 = r2_score(df['total_expenses'], df['predicted_expense'])
     print(f"Mean Squared Error: {mse:.2f}")
     print(f"R² Score: {r2:.2f}")
     
-    # Actual vs Predicted Plot
     create_actual_vs_predicted_plot(
         y_true=df['total_expenses'],
         y_pred=df['predicted_expense'],
         save_path=plot_dir
     )
 
-# -----------------------------
-# 11. Generate Visualizations
-# -----------------------------
-print("📊 Generating visualizations...")
+# 6. Combined Savings Overview
+print("\n✅ All visualizations saved to:")
+print(f"   - {os.path.abspath(plot_dir)}/")
 
-# 1. Financial Health Pie Chart
-if 'financial_health' in df.columns:
-    create_financial_health_pie_chart(df, save_path=plot_dir)
-
-# 2. Income and Savings Histograms
-if all(col in df.columns for col in ['total_income', 'savings_ratio']):
-    create_income_savings_histograms(df, save_path=plot_dir)
-
-# 3. Correlation Heatmap
-numeric_cols = df.select_dtypes(include=[np.number]).columns
-if len(numeric_cols) > 0:
-    create_correlation_heatmap(df, save_path=plot_dir)
-
-# 4. Combined Savings Overview
+# Create combined savings overview
 plt.figure(figsize=(12, 6))
 for user in users:
     user_df = df[df['user_id'] == user].sort_values('month')
@@ -220,9 +237,8 @@ plt.xticks(rotation=45)
 plt.grid(alpha=0.3)
 plt.legend(["Actual Savings", "Predicted Expense"], loc="upper left")
 plt.tight_layout()
-plt.savefig(f"{plot_dir}/combined_savings_overview.png")
+plt.savefig(os.path.join(plot_dir, "combined_savings_overview.png"), dpi=300, bbox_inches='tight')
 plt.close()
 
 print(f"✅ Combined dashboard saved in '{plot_dir}' folder.\n")
-
 print("🎉 All steps complete. Predictions and plots ready.")

@@ -299,3 +299,113 @@ def create_sample_predictions_table(df, n_samples=10, save_path='plots'):
     except Exception as e:
         print(f"Error creating sample predictions table: {str(e)}")
         raise
+
+def create_methodology_visualizations(save_path='plots'):
+    """Create visualizations for the methodology section.
+    
+    This includes:
+    1. Data Preprocessing Flowchart
+    2. Random Forest Classifier Schematic
+    3. Linear Regression Schematic
+    """
+    try:
+        import graphviz
+        from graphviz import Digraph
+        
+        os.makedirs(save_path, exist_ok=True)
+        
+        # -----------------------------
+        # 1. Data Preprocessing Flowchart
+        # -----------------------------
+        print("📊 Creating data preprocessing flowchart...")
+        dot = Digraph(comment='Data Preprocessing Flowchart', 
+                     node_attr={'style': 'filled', 'fillcolor': '#E1F5FE', 'fontname': 'Helvetica'},
+                     edge_attr={'fontname': 'Helvetica'})
+        
+        # Add nodes
+        dot.node('A', 'Raw Financial Data', shape='ellipse', color='#4CAF50')
+        dot.node('B', 'Handle Missing Values\n- Fill with mean/median\n- Drop if necessary', shape='box')
+        dot.node('C', 'Feature Engineering\n- Calculate ratios\n- Create new features', shape='box')
+        dot.node('D', 'Data Scaling\n- StandardScaler\n- Normalization', shape='box')
+        dot.node('E', 'Data Splitting\n- Train/Test Split', shape='box')
+        dot.node('F', 'Ready for Modeling', shape='ellipse', color='#4CAF50')
+        
+        # Add edges
+        dot.edges(['AB', 'BC', 'CD', 'DE', 'EF'])
+        
+        # Save the flowchart
+        dot.format = 'png'
+        dot.render(f'{save_path}/data_preprocessing_flowchart', cleanup=True)
+        
+        # -----------------------------
+        # 2. Random Forest Classifier Schematic
+        # -----------------------------
+        print("🌲 Creating Random Forest schematic...")
+        dot = Digraph(comment='Random Forest Classifier', 
+                     node_attr={'style': 'filled', 'fontname': 'Helvetica'},
+                     graph_attr={'rankdir': 'TB'})
+        
+        # Add nodes
+        dot.node('A', 'Input Features\n(Income, Expenses, etc.)', shape='box', color='#E1F5FE')
+        
+        # Add decision trees
+        for i in range(1, 4):
+            dot.node(f'T{i}', f'Decision Tree {i}', shape='ellipse', color='#FFF9C4')
+            dot.edge('A', f'T{i}')
+        
+        # Add voting node
+        dot.node('V', 'Majority Vote', shape='diamond', color='#C8E6C9')
+        for i in range(1, 4):
+            dot.edge(f'T{i}', 'V')
+        
+        # Add output
+        dot.node('O', 'Financial Health\nPrediction', shape='box', color='#E1F5FE')
+        dot.edge('V', 'O')
+        
+        # Save the schematic
+        dot.format = 'png'
+        dot.render(f'{save_path}/random_forest_schematic', cleanup=True)
+        
+        # -----------------------------
+        # 3. Linear Regression Schematic
+        # -----------------------------
+        print("📈 Creating Linear Regression schematic...")
+        plt.figure(figsize=(10, 6))
+        
+        # Generate sample data
+        np.random.seed(42)
+        X = np.linspace(0, 10, 100)
+        y = 2 * X + 1 + np.random.normal(0, 1.5, 100)
+        
+        # Plot data points
+        plt.scatter(X, y, color='#5C6BC0', alpha=0.6, label='Data Points')
+        
+        # Plot regression line
+        from sklearn.linear_model import LinearRegression
+        model = LinearRegression()
+        model.fit(X.reshape(-1, 1), y)
+        y_pred = model.predict(X.reshape(-1, 1))
+        plt.plot(X, y_pred, color='#E53935', linewidth=2.5, 
+                label=f'Regression Line: y = {model.coef_[0]:.2f}x + {model.intercept_:.2f}')
+        
+        # Add error terms
+        for i in range(0, 100, 10):
+            plt.plot([X[i], X[i]], [y[i], y_pred[i]], 'k--', alpha=0.3)
+        
+        # Add labels and legend
+        plt.title('Linear Regression Model', fontsize=16, pad=20)
+        plt.xlabel('Feature (X)')
+        plt.ylabel('Target (y)')
+        plt.legend()
+        plt.grid(True, linestyle='--', alpha=0.3)
+        
+        # Save the plot
+        plt.tight_layout()
+        plt.savefig(f'{save_path}/linear_regression_schematic.png', dpi=300, bbox_inches='tight')
+        plt.close()
+        
+        print("✅ Methodology visualizations created successfully!")
+        
+    except Exception as e:
+        print(f"Error creating methodology visualizations: {str(e)}")
+        raise

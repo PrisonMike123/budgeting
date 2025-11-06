@@ -1,0 +1,23 @@
+// Data Preprocessing Flowchart
+digraph {
+	A [label="Raw Data
+(monthly_financial_data.csv)"]
+	B [label="Data Cleaning
+- Handle missing values
+- Remove duplicates
+- Fix data types"]
+	C [label="Feature Engineering
+- Calculate ratios
+- Create new features
+- Encode categories"]
+	D [label="Data Scaling
+- Standardize numerical features
+- Normalize ranges"]
+	E [label="Train/Test Split
+- 80/20 split
+- Stratified sampling"]
+	A -> B
+	B -> C
+	C -> D
+	D -> E
+}
