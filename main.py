@@ -10,9 +10,11 @@ from investment_advisor import generate_investment_guidance
 import csv
 import io
 from functools import wraps
+from prediction_utils import make_prediction
 
 # Initialize Flask app
 app = Flask(__name__, static_folder='static')
+app.config['DEBUG'] = True
 
 # Configuration
 app.config.update(
@@ -341,6 +343,22 @@ def invest():
         guidance=guidance,
     )
 
+# API Routes
+@app.route('/api/predict', methods=['POST'])
+def predict():
+    try:
+        data = request.get_json()
+        result = make_prediction(data)
+        return jsonify({
+            'status': 'success',
+            'data': result
+        })
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'message': str(e)
+        }), 400
+
 # Error handlers
 @app.errorhandler(404)
 def not_found_error(error):
@@ -356,4 +374,5 @@ app = app  # This is required for Vercel to detect the Flask app
 # This is the entry point for Vercel
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port, debug=False)
+    print("\n * Running on http://localhost:{} (Press Ctrl+C to quit)".format(port))
+    app.run(host='127.0.0.1', port=port, debug=True)

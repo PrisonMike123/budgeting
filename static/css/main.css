@@ -3375,9 +3375,86 @@ button,
 
 /* Footer */
 
-	#footer {
-		padding: 5em 0 6em 0 ;
-		background-color: #f6f6f6;
+	/* ML Prediction Section */
+.ml-prediction {
+    padding: 3em 0;
+    background-color: #f9f9f9;
+    border-top: 1px solid #e0e0e0;
+    margin-top: 2em;
+}
+
+.ml-prediction h2 {
+    text-align: center;
+    margin-bottom: 1.5em;
+    color: #3c3b3b;
+}
+
+.prediction-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 2em;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.prediction-metric {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1em;
+    padding: 1em;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    font-size: 1.1em;
+}
+
+.metric-label {
+    font-weight: 600;
+    color: #555;
+}
+
+.metric-value {
+    font-weight: 700;
+}
+
+.metric-value.good {
+    color: #28a745;
+}
+
+.metric-value.moderate {
+    color: #ffc107;
+}
+
+.metric-value.needs-improvement {
+    color: #dc3545;
+}
+
+.prediction-tip {
+    margin-top: 1.5em;
+    padding: 1em;
+    background-color: #e7f5ff;
+    border-left: 4px solid #4dabf7;
+    border-radius: 4px;
+    font-style: italic;
+}
+
+.prediction-tip i {
+    margin-right: 0.5em;
+    color: #4dabf7;
+}
+
+.error {
+    color: #dc3545;
+    text-align: center;
+    padding: 1em;
+    background-color: #f8d7da;
+    border-radius: 4px;
+}
+
+/* Footer */
+#footer {
+    padding: 5em 0 6em 0 ;
+    background-color: #f6f6f6;
 	}
 
 		#footer > .inner {

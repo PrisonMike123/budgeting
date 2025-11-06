@@ -149,7 +149,15 @@
 						</div>
 					</div>
 
-				{% include 'footer.html' %}
+				<!-- ML Prediction Section -->
+<section class="ml-prediction">
+    <h2>AI-Powered Financial Health Prediction</h2>
+    <div class="prediction-result" id="mlPredictionResult">
+        <p>Loading predictions...</p>
+    </div>
+</section>
+
+{% include 'footer.html' %}
 			</div>
 
 		<!-- Scripts -->
@@ -158,6 +166,70 @@
 			<script src="{{ url_for('static', filename='js/breakpoints.min.js') }}"></script>
 			<script src="{{ url_for('static', filename='js/util.js') }}"></script>
 			<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<script>
+// Function to load ML predictions
+function loadMLPredictions() {
+    // Get the current form data with safe defaults
+    const formData = {
+        total_income: parseFloat('{{ (budget_data.income.total_income if budget_data and budget_data.income and budget_data.income.total_income is defined else 0) | default(0) }}') || 0,
+        total_expenses: parseFloat('{{ (budget_data.expenses.total_expenses if budget_data and budget_data.expenses and budget_data.expenses.total_expenses is defined else 0) | default(0) }}') || 0,
+        savings: parseFloat('{{ (budget_data.savings.total_savings if budget_data and budget_data.savings and budget_data.savings.total_savings is defined else 0) | default(0) }}') || 0,
+        age: parseFloat('{{ (budget_data.personal_info.age if budget_data and budget_data.personal_info and budget_data.personal_info.age is defined else 30) | default(30) }}') || 30,
+        family_size: parseFloat('{{ (budget_data.personal_info.family_size if budget_data and budget_data.personal_info and budget_data.personal_info.family_size is defined else 1) | default(1) }}') || 1,
+        credit_rating: parseFloat('{{ (budget_data.credit_info.credit_score if budget_data and budget_data.credit_info and budget_data.credit_info.credit_score is defined else 700) | default(700) }}') || 700
+    };
+
+    // Calculate ratios if possible
+    if (formData.total_income > 0) {
+        formData.expense_ratio = formData.total_expenses / formData.total_income;
+        formData.savings_ratio = formData.savings / formData.total_income;
+        formData.debt_ratio = (formData.total_expenses * 0.3) / formData.total_income; // Simplified debt ratio
+    }
+
+    // Make the API call
+    fetch('/api/predict', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            const result = data.data;
+            const resultHtml = `
+                <div class="prediction-card">
+                    <h3>AI Analysis Results</h3>
+                    <div class="prediction-metric">
+                        <span class="metric-label">Financial Health:</span>
+                        <span class="metric-value ${result.financial_health.toLowerCase()}">${result.financial_health}</span>
+                    </div>
+                    <div class="prediction-metric">
+                        <span class="metric-label">Predicted Monthly Expense:</span>
+                        <span class="metric-value">$${result.predicted_expense.toLocaleString()}</span>
+                    </div>
+                    <div class="prediction-tip">
+                        <i class="fas fa-lightbulb"></i> ${result.savings_recommendation}
+                    </div>
+                </div>
+            `;
+            document.getElementById('mlPredictionResult').innerHTML = resultHtml;
+        } else {
+            document.getElementById('mlPredictionResult').innerHTML = 
+                '<p class="error">Could not load predictions. Please try again later.</p>';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        document.getElementById('mlPredictionResult').innerHTML = 
+            '<p class="error">Error loading predictions. Please check your connection.</p>';
+    });
+}
+
+// Load predictions when the page loads
+document.addEventListener('DOMContentLoaded', loadMLPredictions);
+</script>
 
 		<!-- Chart.js -->
 		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
