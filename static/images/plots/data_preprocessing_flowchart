@@ -1,0 +1,23 @@
+// Data Preprocessing Flowchart
+digraph {
+	node [fillcolor="#E1F5FE" fontname=Helvetica style=filled]
+	edge [fontname=Helvetica]
+	A [label="Raw Financial Data" color="#4CAF50" shape=ellipse]
+	B [label="Handle Missing Values
+- Fill with mean/median
+- Drop if necessary" shape=box]
+	C [label="Feature Engineering
+- Calculate ratios
+- Create new features" shape=box]
+	D [label="Data Scaling
+- StandardScaler
+- Normalization" shape=box]
+	E [label="Data Splitting
+- Train/Test Split" shape=box]
+	F [label="Ready for Modeling" color="#4CAF50" shape=ellipse]
+	A -> B
+	B -> C
+	C -> D
+	D -> E
+	E -> F
+}

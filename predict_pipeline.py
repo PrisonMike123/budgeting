@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import joblib
 import os
+import argparse
 from sklearn.metrics import classification_report, mean_squared_error, r2_score
 from visualizations import (
     create_financial_health_pie_chart,
@@ -15,6 +16,12 @@ from visualizations import (
     create_sample_predictions_table,
     create_methodology_visualizations
 )
+
+# Parse command line arguments
+parser = argparse.ArgumentParser(description='Run financial health prediction pipeline')
+parser.add_argument('--skip-user-plots', action='store_true', 
+                    help='Skip generating individual user plots')
+args = parser.parse_args()
 
 # -----------------------------
 # 1. Load models
@@ -113,31 +120,30 @@ if 'month' in df.columns:
     df['month'] = pd.to_datetime(df['month'], format='%Y-%m')
 else:
     # Create synthetic months if not present
-    df['month'] = pd.date_range(start="2024-01-01", periods=len(df), freq="M")
+    df['month'] = pd.date_range(start="2024-01-01", periods=len(df), freq="ME")
 
 users = df['user_id'].unique()
 
 # -----------------------------
-# 9. Generate individual user trend plots
+# 9. Generate visualizations for individual users (optional)
 # -----------------------------
-print("📊 Generating individual user plots...")
-for user in users:
-    user_data = df[df['user_id'] == user]
-    
-    # Create a figure with two subplots
-    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 10))
-    
-    # Plot 1: Income vs Expenses
-    ax1.plot(user_data['month'], user_data['total_income'], 'g-', label='Income')
-    ax1.plot(user_data['month'], user_data['total_expenses'], 'r-', label='Expenses')
-    ax1.set_title(f'Monthly Income vs Expenses for {user}')
-    ax1.set_ylabel('Amount ($)')
-    ax1.legend()
-    ax1.grid(True, linestyle='--', alpha=0.3)
-    
-    # Plot 2: Savings Rate
-    ax2.plot(user_data['month'], user_data['savings_ratio']*100, 'b-', label='Savings Rate')
-    ax2.axhline(y=20, color='r', linestyle='--', label='Recommended (20%)')
+if not args.skip_user_plots:
+    print("\n📊 Generating individual user plots...")
+    for user in users:
+        user_data = df[df['user_id'] == user]
+        if not user_data.empty:
+            # Create user-specific directory
+            user_plot_dir = os.path.join(plot_dir, 'user_plots', str(user))
+            os.makedirs(user_plot_dir, exist_ok=True)
+            
+            # Generate visualizations for this user
+            try:
+                # You can add more user-specific visualizations here
+                pass
+                
+            except Exception as e:
+                print(f"Error generating plots for user {user}: {str(e)}")
+                continue
     ax2.set_title(f'Monthly Savings Rate for {user}')
     ax2.set_xlabel('Month')
     ax2.set_ylabel('Savings Rate (%)')

@@ -235,6 +235,14 @@ def create_metrics_bar_chart(classification_report_dict, save_path='plots'):
 def create_sample_predictions_table(df, n_samples=10, save_path='plots'):
     """Create a table of sample predictions with actual vs predicted values."""
     try:
+        import matplotlib.font_manager as fm
+        
+        # Try to use DejaVu Sans, which has better Unicode support
+        if 'DejaVu Sans' in fm.get_font_names():
+            plt.rcParams['font.family'] = 'DejaVu Sans'
+        elif 'Arial Unicode MS' in fm.get_font_names():
+            plt.rcParams['font.family'] = 'Arial Unicode MS'
+        
         os.makedirs(save_path, exist_ok=True)
         
         # Select sample rows
@@ -246,7 +254,7 @@ def create_sample_predictions_table(df, n_samples=10, save_path='plots'):
         # Hide axes
         ax.axis('off')
         
-        # Create table data
+        # Create table data - use text that's available in most fonts
         table_data = []
         for _, row in sample_df.iterrows():
             table_data.append([
@@ -256,7 +264,7 @@ def create_sample_predictions_table(df, n_samples=10, save_path='plots'):
                 f"${row.get('savings', 0):,.2f}",
                 row.get('financial_health', 'N/A'),
                 row.get('predicted_financial_health', 'N/A'),
-                '✓' if row.get('financial_health') == row.get('predicted_financial_health') else '✗'
+                'CORRECT' if row.get('financial_health') == row.get('predicted_financial_health') else 'WRONG'
             ])
         
         # Create column headers
@@ -301,7 +309,7 @@ def create_sample_predictions_table(df, n_samples=10, save_path='plots'):
         raise
 
 def create_methodology_visualizations(save_path='plots'):
-    """Create visualizations for the methodology section.
+    """Create visualizations for the methodology section using Matplotlib.
     
     This includes:
     1. Data Preprocessing Flowchart
@@ -309,67 +317,110 @@ def create_methodology_visualizations(save_path='plots'):
     3. Linear Regression Schematic
     """
     try:
-        import graphviz
-        from graphviz import Digraph
+        import os
+        import matplotlib.pyplot as plt
+        from matplotlib.patches import FancyArrowPatch, BoxStyle
+        from matplotlib.patches import Rectangle, FancyBboxPatch
+        import numpy as np
         
         os.makedirs(save_path, exist_ok=True)
+        
+        # Set style
+        plt.style.use('seaborn-v0_8-whitegrid')
         
         # -----------------------------
         # 1. Data Preprocessing Flowchart
         # -----------------------------
-        print("📊 Creating data preprocessing flowchart...")
-        dot = Digraph(comment='Data Preprocessing Flowchart', 
-                     node_attr={'style': 'filled', 'fillcolor': '#E1F5FE', 'fontname': 'Helvetica'},
-                     edge_attr={'fontname': 'Helvetica'})
+        print(" Creating data preprocessing flowchart...")
+        fig, ax = plt.subplots(figsize=(12, 8))
         
-        # Add nodes
-        dot.node('A', 'Raw Financial Data', shape='ellipse', color='#4CAF50')
-        dot.node('B', 'Handle Missing Values\n- Fill with mean/median\n- Drop if necessary', shape='box')
-        dot.node('C', 'Feature Engineering\n- Calculate ratios\n- Create new features', shape='box')
-        dot.node('D', 'Data Scaling\n- StandardScaler\n- Normalization', shape='box')
-        dot.node('E', 'Data Splitting\n- Train/Test Split', shape='box')
-        dot.node('F', 'Ready for Modeling', shape='ellipse', color='#4CAF50')
+        # Define box styles
+        box_style = dict(boxstyle="round,pad=0.5", fc="lightblue", ec="steelblue", lw=2)
+        start_end_style = dict(boxstyle="round,pad=0.5", fc="lightgreen", ec="darkgreen", lw=2)
         
-        # Add edges
-        dot.edges(['AB', 'BC', 'CD', 'DE', 'EF'])
+        # Define positions
+        y_pos = [7, 6, 5, 4, 3, 2]
         
-        # Save the flowchart
-        dot.format = 'png'
-        dot.render(f'{save_path}/data_preprocessing_flowchart', cleanup=True)
+        # Draw boxes
+        boxes = [
+            ("Raw Financial Data", start_end_style),
+            ("Handle Missing Values\n- Fill with mean/median\n- Drop if necessary", box_style),
+            ("Feature Engineering\n- Calculate ratios\n- Create new features", box_style),
+            ("Data Scaling\n- StandardScaler\n- Normalization", box_style),
+            ("Data Splitting\n- Train/Test Split", box_style),
+            ("Ready for Modeling", start_end_style)
+        ]
+        
+        for i, (text, style) in enumerate(boxes):
+            ax.text(0.5, y_pos[i], text, 
+                   ha='center', va='center', 
+                   bbox=style, fontsize=10)
+            
+            # Draw arrow
+            if i < len(boxes) - 1:
+                ax.arrow(0.5, y_pos[i] - 0.3, 0, -0.8, 
+                        head_width=0.05, head_length=0.1, 
+                        fc='black', ec='black')
+        
+        ax.set_xlim(0, 1)
+        ax.set_ylim(1, 8)
+        ax.axis('off')
+        plt.title('Data Preprocessing Flowchart', fontsize=14, pad=20)
+        plt.tight_layout()
+        plt.savefig(os.path.join(save_path, 'data_preprocessing_flowchart.png'), dpi=300, bbox_inches='tight')
+        plt.close()
         
         # -----------------------------
         # 2. Random Forest Classifier Schematic
         # -----------------------------
-        print("🌲 Creating Random Forest schematic...")
-        dot = Digraph(comment='Random Forest Classifier', 
-                     node_attr={'style': 'filled', 'fontname': 'Helvetica'},
-                     graph_attr={'rankdir': 'TB'})
+        print(" Creating Random Forest schematic...")
+        fig, ax = plt.subplots(figsize=(12, 8))
         
-        # Add nodes
-        dot.node('A', 'Input Features\n(Income, Expenses, etc.)', shape='box', color='#E1F5FE')
+        # Draw decision trees
+        tree_positions = [(0.2, 0.7), (0.5, 0.7), (0.8, 0.7)]
+        for i, (x, y) in enumerate(tree_positions, 1):
+            # Tree trunk
+            ax.plot([x, x], [y, y - 0.2], 'k-', lw=2)
+            # Tree top
+            ax.add_patch(plt.Circle((x, y + 0.1), 0.15, color='lightgreen', ec='darkgreen', lw=2))
+            ax.text(x, y + 0.1, f'Tree {i}', ha='center', va='center', fontsize=10)
         
-        # Add decision trees
-        for i in range(1, 4):
-            dot.node(f'T{i}', f'Decision Tree {i}', shape='ellipse', color='#FFF9C4')
-            dot.edge('A', f'T{i}')
+        # Draw input features
+        ax.text(0.5, 0.3, 'Input Features\n(Income, Expenses, etc.)', 
+               ha='center', va='center', 
+               bbox=dict(boxstyle="round,pad=0.5", fc="lightblue", ec="steelblue", lw=2))
         
-        # Add voting node
-        dot.node('V', 'Majority Vote', shape='diamond', color='#C8E6C9')
-        for i in range(1, 4):
-            dot.edge(f'T{i}', 'V')
+        # Draw voting node
+        ax.add_patch(plt.Circle((0.5, 0.5), 0.08, color='lightyellow', ec='goldenrod', lw=2))
+        ax.text(0.5, 0.5, 'Vote', ha='center', va='center', fontsize=10)
         
-        # Add output
-        dot.node('O', 'Financial Health\nPrediction', shape='box', color='#E1F5FE')
-        dot.edge('V', 'O')
+        # Draw output
+        ax.text(0.5, 0.1, 'Financial Health\nPrediction', 
+               ha='center', va='center', 
+               bbox=dict(boxstyle="round,pad=0.5", fc="lightblue", ec="steelblue", lw=2))
         
-        # Save the schematic
-        dot.format = 'png'
-        dot.render(f'{save_path}/random_forest_schematic', cleanup=True)
+        # Draw arrows
+        ax.arrow(0.5, 0.4, 0, 0.08, head_width=0.02, head_length=0.02, fc='black', ec='black')
+        ax.arrow(0.5, 0.58, 0, 0.1, head_width=0.02, head_length=0.02, fc='black', ec='black')
+        
+        # Draw connections from trees to voting
+        for x, _ in tree_positions:
+            ax.arrow(x, 0.6, 0.5 - x, -0.1, 
+                    head_width=0.02, head_length=0.02, 
+                    fc='black', ec='black', linestyle='--', alpha=0.5)
+        
+        ax.set_xlim(0, 1)
+        ax.set_ylim(0, 1)
+        ax.axis('off')
+        plt.title('Random Forest Classifier', fontsize=14, pad=20)
+        plt.tight_layout()
+        plt.savefig(os.path.join(save_path, 'random_forest_schematic.png'), dpi=300, bbox_inches='tight')
+        plt.close()
         
         # -----------------------------
         # 3. Linear Regression Schematic
         # -----------------------------
-        print("📈 Creating Linear Regression schematic...")
+        print(" Creating Linear Regression schematic...")
         plt.figure(figsize=(10, 6))
         
         # Generate sample data
@@ -401,10 +452,10 @@ def create_methodology_visualizations(save_path='plots'):
         
         # Save the plot
         plt.tight_layout()
-        plt.savefig(f'{save_path}/linear_regression_schematic.png', dpi=300, bbox_inches='tight')
+        plt.savefig(os.path.join(save_path, 'linear_regression_schematic.png'), dpi=300, bbox_inches='tight')
         plt.close()
         
-        print("✅ Methodology visualizations created successfully!")
+        print(" Methodology visualizations created successfully!")
         
     except Exception as e:
         print(f"Error creating methodology visualizations: {str(e)}")
