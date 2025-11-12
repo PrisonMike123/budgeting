@@ -37,28 +37,24 @@ args = parser.parse_args()
 # -----------------------------
 # 1. Load models
 # -----------------------------
-# Load models and scalers
+# Load models
 models_dir = "models/"
-reg_model_path = os.path.join(models_dir, "linear_regression.pkl")
-clf_model_path = os.path.join(models_dir, "financial_health_model.pkl")
-reg_scaler_path = os.path.join(models_dir, "reg_scaler.pkl")
-clf_scaler_path = os.path.join(models_dir, "clf_scaler.pkl")
+reg_model_path = os.path.join(models_dir, "xgboost/xgboost_regressor.pkl")
+clf_model_path = os.path.join(models_dir, "xgboost/xgboost_classifier.pkl")
 
 # Check if all required files exist
-for path in [reg_model_path, clf_model_path, reg_scaler_path, clf_scaler_path]:
+for path in [reg_model_path, clf_model_path]:
     if not os.path.exists(path):
         raise FileNotFoundError(f"Required file not found: {path}")
 
-# Load models and scalers
-print("🔍 Loading models and scalers...")
+# Load models
+print("🔍 Loading XGBoost models...")
 reg_model = joblib.load(reg_model_path)
 clf_model = joblib.load(clf_model_path)
-scaler_reg = joblib.load(reg_scaler_path)
-scaler_clf = joblib.load(clf_scaler_path)
 
 # Load label encoder for classification
 label_encoder = joblib.load(os.path.join(models_dir, "label_encoder.pkl"))
-print("✅ Models and scalers loaded successfully.\n")
+print("✅ XGBoost models loaded successfully.\n")
 
 # -----------------------------
 # 2. Load dataset
@@ -81,9 +77,8 @@ classification_features = [
     'savings_ratio', 'debt_ratio', 'expense_ratio'
 ]
 
-# Prepare data for classification
+# Prepare data for classification (no scaling needed for XGBoost)
 X_clf = df[classification_features].copy()
-X_clf_scaled = scaler_clf.transform(X_clf[classification_features])
 
 # Prepare regression features (ensure same order as training)
 regression_features = ['age', 'family_size', 'total_income', 'debt_ratio', 'expense_ratio', 'savings_ratio', 'credit_score']
@@ -112,11 +107,13 @@ print(X_clf.head())
 print("💸 Making regression predictions...")
 try:
     # Make sure we're using the same feature order as during training
-    X_reg_ordered = X_reg[regression_features]  # Ensure same order as training
-    X_reg_scaled = scaler_reg.transform(X_reg_ordered)
-    df['predicted_expense'] = reg_model.predict(X_reg_scaled)
+    X_reg_ordered = X_reg[regression_features]
+    X_reg_df = pd.DataFrame(X_reg_ordered, columns=regression_features)
     
-    # Calculate and print regression metrics if true values are available
+    # Make prediction (XGBoost doesn't need scaling)
+    predicted_expense = reg_model.predict(X_reg_df)
+    predicted_expense = [max(0, x) for x in predicted_expense]  # Ensure non-negative
+    df['predicted_expense'] = predicted_expense
     if 'total_expenses' in df.columns:
         mse = mean_squared_error(df['total_expenses'], df['predicted_expense'])
         r2 = r2_score(df['total_expenses'], df['predicted_expense'])
@@ -131,17 +128,14 @@ except Exception as e:
 print("\n🏦 Making classification predictions...")
 try:
     # Ensure same feature order as training
-    X_clf_ordered = X_clf[classification_features]
-    X_clf_scaled = scaler_clf.transform(X_clf_ordered)
+    X_clf_df = pd.DataFrame(X_clf, columns=classification_features)
     
-    # Get predictions and probabilities
-    y_pred_proba = clf_model.predict_proba(X_clf_scaled)
-    y_pred = clf_model.predict(X_clf_scaled)
+    # Predict financial health
+    y_pred = clf_model.predict(X_clf_df)
     
     # Store predictions
     df['predicted_financial_health'] = label_encoder.inverse_transform(y_pred)
     
-    # Print classification report if true labels are available
     if 'financial_health' in df.columns:
         print("\n=== Classification Report ===")
         print(classification_report(

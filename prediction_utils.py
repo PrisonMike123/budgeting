@@ -5,9 +5,8 @@ import numpy as np
 def load_models():
     """Load all the trained models and encoders."""
     return {
-        'reg_model': joblib.load("models/linear_regression.pkl"),
-        'clf_model': joblib.load("models/financial_health_model.pkl"),
-        'scaler': joblib.load("models/scaler.pkl"),
+        'reg_model': joblib.load("models/xgboost/xgboost_regressor.pkl"),
+        'clf_model': joblib.load("models/xgboost/xgboost_classifier.pkl"),
         'label_encoder': joblib.load("models/label_encoder.pkl")
     }
 
@@ -47,8 +46,9 @@ def make_prediction(input_data):
         features['expense_ratio']
     ]
     
-    # Scale the features
-    X_clf = models['scaler'].transform([clf_features])
+    # Prepare features for XGBoost (no scaling needed for XGBoost)
+    X_clf = pd.DataFrame([clf_features], columns=['total_income', 'total_expenses', 'savings', 
+                                               'savings_ratio', 'debt_ratio', 'expense_ratio'])
     
     # Make classification prediction
     health_pred = models['clf_model'].predict(X_clf)[0]
@@ -65,8 +65,12 @@ def make_prediction(input_data):
         features['credit_score']
     ]
     
+    # Prepare features for XGBoost regression
+    X_reg_df = pd.DataFrame([X_reg], columns=['age', 'family_size', 'total_income', 
+                                            'debt_ratio', 'expense_ratio', 'savings_ratio', 'credit_score'])
+    
     # Make regression prediction
-    predicted_expense = models['reg_model'].predict([X_reg])[0]
+    predicted_expense = models['reg_model'].predict(X_reg_df)[0]
     
     return {
         'financial_health': health_label,

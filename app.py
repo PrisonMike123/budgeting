@@ -222,7 +222,7 @@ def goals():
             'current_amount': current_amount,  # Store the current amount
             'time_frame': time_frame,
             'analysis': goal_analysis,
-            'created_at': datetime.datetime.now().isoformat(),
+            'created_at': datetime.now().isoformat(),
             'target_date': target_date.isoformat()
         })
         
@@ -233,8 +233,8 @@ def goals():
     
     # Calculate progress for each goal
     for goal in goals:
-        created_at = datetime.datetime.fromisoformat(goal['created_at'])
-        target_date = created_at + datetime.timedelta(days=goal['time_frame']*30) if 'time_frame' in goal else None
+        created_at = datetime.fromisoformat(goal['created_at'])
+        target_date = created_at + timedelta(days=goal['time_frame']*30) if 'time_frame' in goal else None
         
         goal['progress'] = track_goal_progress(
             target_amount=goal['target_amount'],
@@ -409,12 +409,44 @@ def investment_advisor():
 def predict():
     try:
         data = request.get_json()
-        prediction = make_prediction(data)
+        
+        # Load XGBoost models
+        xgb_reg = joblib.load("models/xgboost/xgboost_regressor.pkl")
+        xgb_clf = joblib.load("models/xgboost/xgboost_classifier.pkl")
+        label_encoder = joblib.load("models/label_encoder.pkl")
+        
+        # Prepare input data
+        input_df = pd.DataFrame([{
+            'age': int(data.get('age', 30)),
+            'family_size': int(data.get('family_size', 1)),
+            'total_income': float(data.get('total_income', 50000)),
+            'total_expenses': float(data.get('total_expenses', 30000)),
+            'savings': float(data.get('savings', 0)),
+            'debt_ratio': float(data.get('debt_ratio', 0)),
+            'expense_ratio': float(data.get('expense_ratio', 0.6)),
+            'savings_ratio': float(data.get('savings_ratio', 0.2)),
+            'credit_score': int(data.get('credit_score', 700))
+        }])
+        
+        # Make predictions
+        expense_pred = xgb_reg.predict(input_df[['age', 'family_size', 'total_income', 'debt_ratio', 
+                                              'expense_ratio', 'savings_ratio', 'credit_score']])[0]
+        
+        health_pred = xgb_clf.predict(input_df[['total_income', 'total_expenses', 'savings', 
+                                             'savings_ratio', 'debt_ratio', 'expense_ratio']])[0]
+        
+        health_label = label_encoder.inverse_transform([health_pred])[0]
+        
         return jsonify({
             'status': 'success',
-            'prediction': prediction,
-            'model': 'random_forest'  # Indicate which model was used
+            'prediction': {
+                'financial_health': health_label,
+                'predicted_expense': float(expense_pred),
+                'savings_recommendation': f"Aim to save at least {max(20, min(40, 30 + (700 - input_df['credit_score'].iloc[0]) // 20))}% of your income"
+            },
+            'model': 'xgboost'
         })
+        
     except Exception as e:
         return jsonify({
             'status': 'error',
