@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investment Advisor - OakLedger</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/noscript.css') }}" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #2ecc71;
+            --info-color: #3498db;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --light-bg: #f8f9fa;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            color: #333;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            border-radius: 10px 10px 0 0 !important;
+        }
+        
+        .risk-profile-badge {
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+        
+        .risk-conservative { background-color: #3498db; color: white; }
+        .risk-moderate { background-color: #f39c12; color: white; }
+        .risk-aggressive { background-color: #e74c3c; color: white; }
+        
+        .allocation-card {
+            border-left: 4px solid var(--primary-color);
+            padding: 15px;
+            margin-bottom: 15px;
+            background: white;
+            border-radius: 8px;
+        }
+        
+        .progress {
+            height: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        
+        .tooltip-inner {
+            max-width: 300px;
+            padding: 10px;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 20px 0;
+        }
+        
+        .nav-pills .nav-link.active {
+            background-color: var(--primary-color);
+        }
+        
+        .nav-pills .nav-link {
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body class="is-preload">
+    {% include 'header.html' %}
+    
+    <div id="main">
+        <div class="inner">
+            <header class="major">
+                <h1>Investment Advisor</h1>
+                <p>Get personalized investment recommendations based on your financial profile</p>
+            </header>
+            
+            <div class="container py-3">
+        <div class="row mb-5">
+            <div class="col-12 text-center">
+                <h1 class="display-4 mb-3">Investment Advisor</h1>
+                <p class="lead">Get personalized investment recommendations based on your financial profile</p>
+            </div>
+        </div>
+        
+        <div class="row">
+            <!-- Risk Profile Section -->
+            <div class="col-lg-4">
+                <div class="card h-100">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-user-shield me-2"></i>Your Risk Profile</span>
+                        <span id="riskBadge" class="risk-profile-badge">Loading...</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center mb-4">
+                            <div class="chart-container">
+                                <canvas id="riskMeter"></canvas>
+                            </div>
+                        </div>
+                        <div id="riskDescription" class="text-muted">
+                            <!-- Dynamic content will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Allocation Summary -->
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-chart-pie me-2"></i>Recommended Asset Allocation
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="chart-container">
+                                    <canvas id="allocationChart"></canvas>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div id="allocationDetails">
+                                    <!-- Dynamic content will be inserted here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Investment Recommendations -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <ul class="nav nav-pills card-header-pills" id="recommendationTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="low-risk-tab" data-bs-toggle="pill" data-bs-target="#low-risk" type="button" role="tab">
+                                    <i class="fas fa-shield-alt me-2"></i>Low Risk
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="growth-tab" data-bs-toggle="pill" data-bs-target="#growth" type="button" role="tab">
+                                    <i class="fas fa-chart-line me-2"></i>Growth
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content" id="recommendationTabsContent">
+                            <div class="tab-pane fade show active" id="low-risk" role="tabpanel">
+                                <div id="lowRiskRecommendations">
+                                    <!-- Low risk recommendations will be inserted here -->
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="growth" role="tabpanel">
+                                <div id="growthRecommendations">
+                                    <!-- Growth recommendations will be inserted here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Projection Chart -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-project-diagram me-2"></i>Projected Growth
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="projectionChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/browser.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/breakpoints.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/util.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    
+    <script>
+        // Initialize tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+        
+        // Chart.js global configuration
+        Chart.defaults.font.family = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
+        Chart.defaults.color = '#6c757d';
+        
+        // Sample data - this would come from your backend
+        const userData = {
+            monthlyIncome: 150000,
+            ageRange: '25-34',
+            riskProfile: 'Aggressive',
+            allocation: {
+                lowRisk: 30,
+                growth: 70
+            },
+            recommendations: {
+                lowRisk: [
+                    { name: 'Emergency Fund', percentage: 40, amount: 18000, notes: '3-6 months of expenses' },
+                    { name: 'Fixed Deposits', percentage: 30, amount: 13500, notes: 'Stable returns with low risk' },
+                    { name: 'Debt Funds', percentage: 20, amount: 9000, notes: 'Better returns than FDs with moderate risk' },
+                    { name: 'Corporate Bonds', percentage: 10, amount: 4500, notes: 'Higher returns with slightly higher risk' }
+                ],
+                growth: [
+                    { name: 'Equity Mutual Funds', percentage: 50, amount: 52500, notes: 'Diversified equity exposure' },
+                    { name: 'Direct Stocks', percentage: 25, amount: 26250, notes: 'High growth potential' },
+                    { name: 'Sectoral Funds', percentage: 15, amount: 15750, notes: 'Focused sector exposure' },
+                    { name: 'International Funds', percentage: 10, amount: 10500, notes: 'Global diversification' }
+                ]
+            },
+            riskDescription: {
+                'Aggressive': 'You have a high tolerance for risk and are comfortable with market volatility. Your portfolio is growth-oriented with a focus on equities and other high-growth assets.',
+                'Moderate': 'You have a balanced approach to risk and return. Your portfolio includes a mix of growth and income-generating assets.',
+                'Conservative': 'You prefer to protect your capital and are willing to accept lower returns for greater stability. Your portfolio is focused on capital preservation.'
+            }
+        };
+        
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            updateRiskProfile();
+            renderAllocationChart();
+            renderRecommendations();
+            renderProjectionChart();
+        });
+        
+        function updateRiskProfile() {
+            const riskBadge = document.getElementById('riskBadge');
+            const riskDescription = document.getElementById('riskDescription');
+            
+            riskBadge.className = `risk-profile-badge risk-${userData.riskProfile.toLowerCase()}`;
+            riskBadge.textContent = userData.riskProfile;
+            riskDescription.textContent = userData.riskDescription[userData.riskProfile];
+            
+            // Render risk meter
+            renderRiskMeter();
+        }
+        
+        function renderRiskMeter() {
+            const ctx = document.getElementById('riskMeter').getContext('2d');
+            const riskLevels = ['Conservative', 'Moderate', 'Aggressive'];
+            const riskIndex = riskLevels.indexOf(userData.riskProfile);
+            
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: riskLevels,
+                    datasets: [{
+                        data: [1, 1, 1],
+                        backgroundColor: ['#3498db', '#f39c12', '#e74c3c'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    cutout: '70%',
+                    rotation: -90,
+                    circumference: 180,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: false }
+                    },
+                    animation: {
+                        animateRotate: true,
+                        animateScale: true
+                    }
+                }
+            });
+            
+            // Add needle
+            const needle = document.createElement('div');
+            needle.className = 'risk-needle';
+            needle.style.position = 'absolute';
+            needle.style.bottom = '10px';
+            needle.style.left = '50%';
+            needle.style.width = '2px';
+            needle.style.height = '60px';
+            needle.style.backgroundColor = 'var(--primary-color)';
+            needle.style.transformOrigin = 'bottom center';
+            needle.style.transform = `translateX(-50%) rotate(${riskIndex * 45 - 45}deg)`;
+            needle.style.transition = 'transform 1s ease-in-out';
+            
+            document.querySelector('.chart-container').appendChild(needle);
+        }
+        
+        function renderAllocationChart() {
+            const ctx = document.getElementById('allocationChart').getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Low Risk', 'Growth'],
+                    datasets: [{
+                        data: [userData.allocation.lowRisk, userData.allocation.growth],
+                        backgroundColor: ['#3498db', '#2ecc71'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true,
+                                pointStyle: 'circle'
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.label}: ${context.raw}% of portfolio`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Update allocation details
+            const allocationDetails = document.getElementById('allocationDetails');
+            const totalAmount = userData.monthlyIncome * (userData.allocation.lowRisk + userData.allocation.growth) / 100;
+            
+            allocationDetails.innerHTML = `
+                <h5>Monthly Investment: ₹${userData.monthlyIncome.toLocaleString()}</h5>
+                <div class="mt-3">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Low Risk (${userData.allocation.lowRisk}%)</span>
+                        <strong>₹${(userData.monthlyIncome * userData.allocation.lowRisk / 100).toLocaleString()}</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Growth (${userData.allocation.growth}%)</span>
+                        <strong>₹${(userData.monthlyIncome * userData.allocation.growth / 100).toLocaleString()}</strong>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between">
+                        <strong>Total Investment</strong>
+                        <strong>₹${totalAmount.toLocaleString()}</strong>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function renderRecommendations() {
+            const lowRiskContainer = document.getElementById('lowRiskRecommendations');
+            const growthContainer = document.getElementById('growthRecommendations');
+            
+            // Render low risk recommendations
+            let lowRiskHTML = '<div class="row">';
+            userData.recommendations.lowRisk.forEach(item => {
+                lowRiskHTML += `
+                    <div class="col-md-6 mb-4">
+                        <div class="allocation-card">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h6 class="mb-0">${item.name}</h6>
+                                <span class="badge bg-primary">${item.percentage}%</span>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar" style="width: ${item.percentage}%"></div>
+                            </div>
+                            <div class="d-flex justify-content-between text-muted small">
+                                <span>₹${item.amount.toLocaleString()}/month</span>
+                                <span>
+                                    <i class="fas fa-info-circle" data-bs-toggle="tooltip" title="${item.notes}"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            lowRiskHTML += '</div>';
+            lowRiskContainer.innerHTML = lowRiskHTML;
+            
+            // Render growth recommendations
+            let growthHTML = '<div class="row">';
+            userData.recommendations.growth.forEach(item => {
+                growthHTML += `
+                    <div class="col-md-6 mb-4">
+                        <div class="allocation-card">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h6 class="mb-0">${item.name}</h6>
+                                <span class="badge bg-success">${item.percentage}%</span>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar bg-success" style="width: ${item.percentage}%"></div>
+                            </div>
+                            <div class="d-flex justify-content-between text-muted small">
+                                <span>₹${item.amount.toLocaleString()}/month</span>
+                                <span>
+                                    <i class="fas fa-info-circle" data-bs-toggle="tooltip" title="${item.notes}"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            growthHTML += '</div>';
+            growthContainer.innerHTML = growthHTML;
+            
+            // Reinitialize tooltips
+            tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        }
+        
+        function renderProjectionChart() {
+            const ctx = document.getElementById('projectionChart').getContext('2d');
+            
+            // Sample projection data (in years)
+            const years = Array.from({length: 21}, (_, i) => i); // 0 to 20 years
+            
+            function calculateProjection(initial, monthly, years, rate) {
+                let result = [initial];
+                let amount = initial;
+                for (let i = 1; i <= years; i++) {
+                    for (let m = 0; m < 12; m++) {
+                        amount = (amount + monthly) * (1 + rate/12);
+                    }
+                    result.push(Math.round(amount));
+                }
+                return result;
+            }
+            
+            const initialInvestment = 0;
+            const monthlyInvestment = userData.monthlyIncome * (userData.allocation.lowRisk + userData.allocation.growth) / 100;
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: years,
+                    datasets: [
+                        {
+                            label: 'Conservative (5% return)',
+                            data: calculateProjection(initialInvestment, monthlyInvestment, 20, 0.05),
+                            borderColor: '#3498db',
+                            backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                            fill: true,
+                            tension: 0.3
+                        },
+                        {
+                            label: 'Moderate (8% return)',
+                            data: calculateProjection(initialInvestment, monthlyInvestment, 20, 0.08),
+                            borderColor: '#f39c12',
+                            backgroundColor: 'rgba(243, 156, 18, 0.1)',
+                            fill: true,
+                            tension: 0.3
+                        },
+                        {
+                            label: 'Aggressive (12% return)',
+                            data: calculateProjection(initialInvestment, monthlyInvestment, 20, 0.12),
+                            borderColor: '#2ecc71',
+                            backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                            fill: true,
+                            tension: 0.3
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Years',
+                                font: {
+                                    weight: 'bold'
+                                }
+                            },
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Portfolio Value (₹)',
+                                font: {
+                                    weight: 'bold'
+                                }
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return '₹' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += '₹' + context.parsed.y.toLocaleString();
+                                    }
+                                    return label;
+                                }
+                            }
+                        },
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Expose functions for testing
+        window.investmentAdvisor = {
+            updateRiskProfile,
+            renderAllocationChart,
+            renderRecommendations,
+            renderProjectionChart
+        };
+    </script>
+</body>
+</html>

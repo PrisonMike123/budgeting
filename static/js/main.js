@@ -4,7 +4,20 @@
 	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 */
 
-(function($) {
+// Wait for jQuery to be ready
+(function() {
+    // Check if jQuery is loaded
+    function checkJQuery() {
+        if (window.jQuery) {
+            initJQuery(jQuery);
+        } else {
+            // If not loaded yet, wait and check again
+            setTimeout(checkJQuery, 100);
+        }
+    }
+
+    // Initialize jQuery-dependent code
+    function initJQuery($) {
 
 	var	$window = $(window),
 		$body = $('body');
@@ -182,4 +195,8 @@
 
 			});
 
-})(jQuery);
+    }
+
+    // Start checking for jQuery
+    checkJQuery();
+})();

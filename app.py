@@ -349,35 +349,54 @@ def download_csv():
 
 @app.route("/invest", methods=['GET', 'POST'])
 def invest():
+    """Legacy investment route - redirects to the new advisor"""
+    return redirect(url_for('investment_advisor'))
+
+@app.route("/investment-advisor", methods=['GET', 'POST'])
+def investment_advisor():
+    """Enhanced investment advisor with modern UI and detailed recommendations"""
     year = get_current_year()
     
-    if request.method == 'POST':
-        # Get form data
-        investment_amount = float(request.form.get('investment_amount', 0))
-        risk_tolerance = request.form.get('risk_tolerance', 'moderate')
-        investment_goal = request.form.get('investment_goal', 'retirement')
-        time_horizon = int(request.form.get('time_horizon', 10))  # in years
-        
-        # Get user's financial data from session or use defaults
-        monthly_income = float(session.get('budget_data', {}).get('monthly_income', 5000))
-        monthly_savings = float(session.get('budget_data', {}).get('financial_health', {}).get('metrics', {}).get('monthly_savings', 1000))
-        
-        # Generate investment guidance
-        investment_advice = generate_investment_guidance(
-            investment_amount=investment_amount,
-            risk_tolerance=risk_tolerance,
-            investment_goal=investment_goal,
-            time_horizon_years=time_horizon,
-            monthly_income=monthly_income,
-            monthly_savings=monthly_savings
-        )
-        
-        return render_template("invest.html", 
-                             year=year,
-                             investment_advice=investment_advice,
-                             form_data=request.form)
+    # Get user data from session or use defaults
+    user_data = {
+        'monthly_income': float(session.get('budget_data', {}).get('monthly_income', 50000)),
+        'age_range': request.form.get('age_range', '25-34'),
+        'risk_tolerance': request.form.get('risk_tolerance', '').lower(),
+        'time_horizon': int(request.form.get('time_horizon', 10)),
+        'financial_health': session.get('budget_data', {}).get('financial_health', {})
+    }
     
-    # For GET requests, show the form
+    # Generate investment guidance
+    guidance = generate_investment_guidance(
+        monthly_income=user_data['monthly_income'],
+        age_range=user_data['age_range'],
+        financial_health=user_data['financial_health'],
+        risk_tolerance=user_data['risk_tolerance'] or None,
+        time_horizon=user_data['time_horizon']
+    )
+    
+    # Prepare data for the template
+    template_data = {
+        'year': year,
+        'user_data': user_data,
+        'guidance': guidance,
+        'age_ranges': ['18-24', '25-34', '35-44', '45-54', '55+'],
+        'risk_levels': [
+            {'value': 'conservative', 'label': 'Conservative'},
+            {'value': 'moderate', 'label': 'Moderate'},
+            {'value': 'aggressive', 'label': 'Aggressive'}
+        ],
+        'time_horizons': [
+            {'years': 1, 'label': '1 year'},
+            {'years': 3, 'label': '3 years'},
+            {'years': 5, 'label': '5 years'},
+            {'years': 10, 'label': '10 years'},
+            {'years': 15, 'label': '15 years'},
+            {'years': 20, 'label': '20+ years'}
+        ]
+    }
+    
+    return render_template("investment_advisor_new.html", **template_data)
     return render_template("invest.html", year=year)
 
 

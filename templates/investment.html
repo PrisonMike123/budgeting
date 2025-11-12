@@ -1,62 +1,195 @@
 <!DOCTYPE HTML>
 <html>
 	<head>
-		<title>Investment Guidance</title>
+		<title>Investment Guidance - OakLedger</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 		<noscript><link rel="stylesheet" href="{{ url_for('static', filename='css/noscript.css') }}" /></noscript>
+		<style>
+			/* Investment specific styles */
+			.allocation-chart {
+				max-width: 300px;
+				margin: 20px auto;
+			}
+			.investment-card {
+				border-left: 4px solid #4CAF50;
+				padding: 15px;
+				margin-bottom: 15px;
+				background: #fff;
+				border-radius: 4px;
+				box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+			}
+			.growth .investment-card {
+				border-left-color: #2196F3;
+			}
+			.tooltip {
+				position: relative;
+				display: inline-block;
+				margin-left: 5px;
+				cursor: help;
+			}
+			.tooltip .tooltiptext {
+				visibility: hidden;
+				width: 250px;
+				background-color: #4a4a4a;
+				color: #fff;
+				text-align: center;
+				border-radius: 6px;
+				padding: 10px;
+				position: absolute;
+				z-index: 1;
+				bottom: 125%;
+				left: 50%;
+				transform: translateX(-50%);
+				top: auto;
+				opacity: 0;
+				transition: opacity 0.3s;
+			}
+			.tooltip:hover .tooltiptext {
+				visibility: visible;
+				opacity: 1;
+			}
+			.progress {
+				height: 8px;
+				background: #eee;
+				margin: 8px 0;
+				overflow: hidden;
+			}
+			.progress-bar {
+				height: 100%;
+				background: #4CAF50;
+				transition: width 0.3s ease;
+			}
+			.growth .progress-bar {
+				background: #2196F3;
+			}
+		</style>
 	</head>
 	<body class="is-preload">
+		<!-- Wrapper -->
 		<div id="wrapper">
 			{% include 'header.html' %}
 
+			<!-- Main -->
 			<div id="main">
 				<div class="inner">
-					<header>
+					<header class="major">
 						<h1>Investment Guidance</h1>
-						<p>Simple allocation split into low-risk and growth options based on your profile.</p>
+						<p>Smart allocation strategy tailored to your financial profile and risk tolerance.</p>
 					</header>
 
 					<section>
 						<div class="box">
-							{% if guidance %}
-								<h2>Risk Profile: {{ guidance.risk_profile }}</h2>
-								<p>Suggested Split: <strong>{{ guidance.split.low_risk_pct }}% Low-Risk</strong> / <strong>{{ guidance.split.growth_pct }}% Growth</strong></p>
-
-								<div class="row">
-									<div class="col-6 col-12-medium">
-										<h3>Low-Risk Bucket</h3>
-										<ul>
-											{% for item in guidance.suggested_allocation.low_risk %}
-											<li>
-												<strong>{{ item.name }}</strong> — {{ item.percentage }}% of income
-												<div style="font-size: 0.95em; color: #666;">Amount: {{ item.display_amount }}</div>
-												<div style="font-size: 0.95em;">{{ item.notes }}</div>
-											</li>
-											{% endfor %}
-										</ul>
+						{% if guidance %}
+							<div class="row">
+								<div class="col-8 col-12-medium">
+									<h2>Your Investment Strategy</h2>
+									<div class="risk-profile">
+										<h3>Risk Profile: <span class="risk-{{ guidance.risk_profile|lower }}">{{ guidance.risk_profile }}</span></h3>
+										<div class="risk-indicator">
+											<div class="risk-level risk-{{ guidance.risk_profile|lower }}"></div>
+										</div>
+										<p>Based on your age and financial situation, we recommend a <strong>{{ guidance.risk_profile }}</strong> investment approach.</p>
 									</div>
-									<div class="col-6 col-12-medium">
-										<h3>Growth Bucket</h3>
-										<ul>
+								</div>
+								<div class="col-4 col-12-medium">
+									<div class="allocation-chart">
+										<canvas 
+											id="allocationChart"
+											data-low-risk="{{ guidance.split.low_risk_pct }}"
+											data-growth="{{ guidance.split.growth_pct }}"
+											data-monthly-income="{{ budget_data.monthly_income|default(0) }}"
+											data-total-allocation="{{ guidance.split.low_risk_pct + guidance.split.growth_pct }}">
+										</canvas>
+									</div>
+								</div>
+							</div>
+
+							<div class="row" style="margin-top: 2em;">
+								<div class="col-6 col-12-medium">
+									<div class="box">
+										<h3><i class="fas fa-shield-alt"></i> Low-Risk Investments ({{ guidance.split.low_risk_pct }}%)</h3>
+										<div class="low-risk">
+											{% for item in guidance.suggested_allocation.low_risk %}
+											<div class="investment-card">
+												<strong>{{ item.name }}</strong>
+												<span class="tooltip">
+													<i class="fas fa-info-circle"></i>
+													<span class="tooltiptext">{{ item.notes }}</span>
+												</span>
+												{% set width_percent = ((item.percentage / guidance.split.low_risk_pct) * 100)|round|int %}
+												<div class="progress" role="progressbar" 
+												     aria-valuenow="{{ item.percentage }}" 
+												     aria-valuemin="0" 
+												     aria-valuemax="{{ guidance.split.low_risk_pct }}" 
+												     aria-label="Allocation percentage">
+													<div class="progress-bar" style="width: {{ width_percent }}%"></div>
+												</div>
+												<div style="display: flex; justify-content: space-between; font-size: 0.9em;">
+													<span>{{ "%.1f"|format(item.percentage) }}% of income</span>
+													<span>{{ item.display_amount }}/month</span>
+												</div>
+											</div>
+											{% endfor %}
+										</div>
+									</div>
+								</div>
+								<div class="col-6 col-12-medium">
+									<div class="box">
+										<h3><i class="fas fa-chart-line"></i> Growth Investments ({{ guidance.split.growth_pct }}%)</h3>
+										<div class="growth">
 											{% for item in guidance.suggested_allocation.growth %}
-											<li>
-												<strong>{{ item.name }}</strong> — {{ item.percentage }}% of income
-												<div style="font-size: 0.95em; color: #666;">Amount: {{ item.display_amount }}</div>
-												<div style="font-size: 0.95em;">{{ item.notes }}</div>
-											</li>
+											<div class="investment-card growth">
+												<strong>{{ item.name }}</strong>
+												<span class="tooltip">
+													<i class="fas fa-info-circle"></i>
+													<span class="tooltiptext">{{ item.notes }}</span>
+												</span>
+												{% set width_percent = ((item.percentage / guidance.split.growth_pct) * 100)|round|int %}
+												<div class="progress" role="progressbar" 
+												     aria-valuenow="{{ item.percentage }}" 
+												     aria-valuemin="0" 
+												     aria-valuemax="{{ guidance.split.growth_pct }}" 
+												     aria-label="Allocation percentage">
+													<div class="progress-bar growth-bar" style="width: {{ width_percent }}%"></div>
+												</div>
+												<div style="display: flex; justify-content: space-between; font-size: 0.9em;">
+													<span>{{ "%.1f"|format(item.percentage) }}% of income</span>
+													<span>{{ item.display_amount }}/month</span>
+												</div>
+											</div>
+											{% endfor %}
+										</div>
+									</div>
+								</div>
+							</div>
+
+								<div class="box" style="margin-top: 2em;">
+								<h3><i class="fas fa-lightbulb"></i> Personalized Recommendations</h3>
+								<div class="row">
+									<div class="col-12">
+										<ul class="alt">
+											{% for n in guidance.notes %}
+											<li><i class="fas fa-check-circle" style="color: #4CAF50;"></i> {{ n }}</li>
 											{% endfor %}
 										</ul>
 									</div>
 								</div>
+							</div>
 
-								<h3>Notes</h3>
-								<ul>
-									{% for n in guidance.notes %}
-									<li>{{ n }}</li>
-									{% endfor %}
-								</ul>
+							<div class="box" style="margin-top: 2em;">
+								<h3><i class="fas fa-chart-pie"></i> Projected Growth</h3>
+								<div class="row">
+									<div class="col-12">
+										<canvas id="projectionChart" height="100"></canvas>
+										<p style="text-align: center; margin-top: 1em;">
+											<small>Projected value based on historical returns. Past performance is not indicative of future results.</small>
+										</p>
+									</div>
+								</div>
+							</div>
 							{% else %}
 								<p>No profile data found. Please fill your details on the Home page to get personalized guidance.</p>
 								<ul class="actions">
@@ -91,10 +224,160 @@
 			{% include 'footer.html' %}
 		</div>
 
+		<!-- Scripts -->
 		<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
 		<script src="{{ url_for('static', filename='js/browser.min.js') }}"></script>
 		<script src="{{ url_for('static', filename='js/breakpoints.min.js') }}"></script>
 		<script src="{{ url_for('static', filename='js/util.js') }}"></script>
 		<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+		<script src="{{ url_for('static', filename='js/investment.js') }}"></script>
+		<script>
+			// Initialize page when document is ready
+			document.addEventListener('DOMContentLoaded', function() {
+				// Any additional initialization can go here
+			});
+
+			// Initialize charts
+			function initCharts() {
+				if (typeof Chart === 'undefined') {
+					console.error('Chart.js not loaded');
+					return;
+				}
+
+				// Allocation Pie Chart
+				const ctx = document.getElementById('allocationChart');
+				if (ctx) {
+					const chartData = JSON.parse(ctx.getAttribute('data-chart-data'));
+					new Chart(ctx.getContext('2d'), {
+						type: 'doughnut',
+						data: {
+							labels: ['Low-Risk', 'Growth'],
+							datasets: [{
+								data: [
+									chartData.lowRisk,
+									chartData.growth
+								],
+								backgroundColor: ['#4CAF50', '#2196F3'],
+								borderWidth: 0
+							}]
+						},
+						options: {
+							responsive: true,
+							maintainAspectRatio: false,
+							cutout: '70%',
+							plugins: {
+								legend: {
+									position: 'bottom',
+									labels: {
+										boxWidth: 12,
+										padding: 15
+									}
+								}
+							}
+						}
+					});
+				}
+				
+
+				// Projection Line Chart
+				const projectionCtx = document.getElementById('projectionChart');
+				if (!projectionCtx) return;
+
+				// Get data from data attributes
+				const allocationChart = document.getElementById('allocationChart');
+				if (!allocationChart) return;
+
+				const monthlyIncome = parseFloat(allocationChart.dataset.monthlyIncome) || 0;
+				const totalAllocationPct = parseFloat(allocationChart.dataset.totalAllocation) || 0;
+				const monthlyInvestment = (monthlyIncome * totalAllocationPct) / 100;
+				const years = [0, 1, 3, 5, 10, 15, 20];
+				// Simple projection calculation (simplified for demo)
+				function calculateProjection(years, annualReturn) {
+					let total = 0;
+					return years.map(year => {
+						total = (total + (monthlyInvestment * 12)) * (1 + annualReturn);
+						return Math.round(total);
+					});
+				}
+
+				const projectionChart = new Chart(projectionCtx, {
+					type: 'line',
+					data: {
+						labels: years,
+						datasets: [
+							{
+								label: 'Conservative (4% return)',
+								data: calculateProjection(years, 0.04),
+								borderColor: '#4CAF50',
+								tension: 0.3,
+								fill: false
+							},
+							{
+								label: 'Moderate (7% return)',
+								data: calculateProjection(years, 0.07),
+								borderColor: '#FFC107',
+								tension: 0.3,
+								fill: false
+							},
+							{
+								label: 'Aggressive (10% return)',
+								data: calculateProjection(years, 0.10),
+								borderColor: '#F44336',
+								tension: 0.3,
+								fill: false
+							}
+						]
+					},
+					options: {
+						responsive: true,
+						scales: {
+							y: {
+								title: {
+									display: true,
+									text: 'Portfolio Value (₹)',
+									font: {
+										weight: 'bold'
+									}
+								},
+								grid: {
+									display: false
+								},
+								ticks: {
+									callback: function(value) {
+										return '₹' + value.toLocaleString();
+									}
+								}
+							},
+							x: {
+								title: {
+									display: true,
+									text: 'Years',
+									font: {
+										weight: 'bold'
+									}
+								}
+							}
+						},
+						plugins: {
+							tooltip: {
+								callbacks: {
+									label: function(context) {
+										let label = context.dataset.label || '';
+										if (label) {
+											label += ': ';
+										}
+										if (context.parsed.y !== null) {
+											label += '₹' + context.parsed.y.toLocaleString();
+										}
+										return label;
+									}
+								}
+							}
+						}
+					}
+				});
+			});
+		</script>
 	</body>
 </html>
