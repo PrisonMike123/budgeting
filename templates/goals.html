@@ -240,7 +240,13 @@
                                     </div>
                                     {% for goal in goals %}
                                         <div class="box">
-                                            <h3>{{ goal.name }}</h3>
+                                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                                <h3>{{ goal.name }}</h3>
+                                                <div>
+                                                    <button class="button small edit-goal" data-goal-id="{{ loop.index0 }}">Edit</button>
+                                                </div>
+                                            </div>
+                                            <div data-target-amount="{{ goal.target_amount }}" data-current-amount="{{ goal.current_amount|default(0) }}" data-time-frame="{{ goal.time_frame|default(12) }}" style="display: none;"></div>
                                             <div class="progress-container">
                                                 <!-- Progress Bar -->
                                                 <div class="progress-bar">
@@ -306,7 +312,99 @@
 				{% include 'footer.html' %}
 			</div>
 
+        <!-- Edit Goal Modal -->
+        <div id="editGoalModal" class="modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(255,255,255,0.9);">
+            <div class="modal-content" style="background-color: #2c2c2c; color: #f0f0f0; margin: 10% auto; padding: 25px; border: 1px solid #444; width: 80%; max-width: 600px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
+                <span class="close" style="color: #bbb; float: right; font-size: 28px; font-weight: bold; cursor: pointer; transition: color 0.3s;">&times;</span>
+                <h3>Edit Goal</h3>
+                <form id="editGoalForm" method="post" action="{{ url_for('update_goal') }}">
+                    <input type="hidden" name="goal_index" id="editGoalIndex">
+                    <div class="row gtr-uniform">
+                        <div class="col-12">
+                            <label for="edit_goal_name" style="color: #f0f0f0;">Goal Name</label>
+                            <input type="text" name="goal_name" id="edit_goal_name" required style="background-color: #3a3a3a; color: #ffffff; border: 1px solid #555; padding: 8px; border-radius: 4px; width: 100%;">
+                        </div>
+                        <div class="col-6 col-12-xsmall">
+                            <label for="edit_target_amount" style="color: #f0f0f0;">Target Amount (₹)</label>
+                            <input type="number" name="target_amount" id="edit_target_amount" min="0" step="0.01" required style="background-color: #3a3a3a; color: #ffffff; border: 1px solid #555; padding: 8px; border-radius: 4px; width: 100%;">
+                        </div>
+                        <div class="col-6 col-12-xsmall">
+                            <label for="edit_current_amount" style="color: #f0f0f0;">Current Amount (₹)</label>
+                            <input type="number" name="current_amount" id="edit_current_amount" min="0" step="0.01" required style="background-color: #3a3a3a; color: #ffffff; border: 1px solid #555; padding: 8px; border-radius: 4px; width: 100%;">
+                        </div>
+                        <div class="col-12">
+                            <label for="edit_time_frame" style="color: #f0f0f0;">Time Frame (months)</label>
+                            <input type="number" name="time_frame" id="edit_time_frame" min="1" required style="background-color: #3a3a3a; color: #ffffff; border: 1px solid #555; padding: 8px; border-radius: 4px; width: 100%;">
+                        </div>
+                        <div class="col-12">
+                            <ul class="actions" style="margin-top: 20px;">
+                                <li><input type="submit" value="Update Goal" class="primary" style="background-color: #4a6fa5; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;" /></li>
+                                <li><input type="button" value="Cancel" class="button" id="cancelEdit" style="background-color: #555; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; margin-left: 10px;" /></li>
+                            </ul>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <script>
+            // Modal functionality
+            const modal = document.getElementById('editGoalModal');
+            const span = document.getElementsByClassName('close')[0];
+            const cancelBtn = document.getElementById('cancelEdit');
+            
+            // When user clicks on (x), close the modal
+            span.onclick = function() {
+                modal.style.display = "none";
+            }
+            
+            // Add hover effect for close button
+            span.addEventListener('mouseover', function() {
+                this.style.color = '#fff';
+            });
+            
+            span.addEventListener('mouseout', function() {
+                this.style.color = '#bbb';
+            });
+            
+            // When user clicks on Cancel button, close the modal
+            cancelBtn.onclick = function() {
+                modal.style.display = "none";
+            }
+            
+            // When user clicks anywhere outside of the modal, close it
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+            
+            // Edit goal button click handler
+            document.addEventListener('click', function(event) {
+                if (event.target && event.target.matches('.edit-goal')) {
+                    const goalId = event.target.getAttribute('data-goal-id');
+                    
+                    // Get goal data from the DOM instead of template
+                    const goalCard = event.target.closest('.box');
+                    const goalData = {
+                        name: goalCard.querySelector('h3').textContent.trim(),
+                        target_amount: parseFloat(goalCard.querySelector('[data-target-amount]').dataset.targetAmount),
+                        current_amount: parseFloat(goalCard.querySelector('[data-current-amount]').dataset.currentAmount) || 0,
+                        time_frame: parseInt(goalCard.querySelector('[data-time-frame]').dataset.timeFrame) || 12
+                    };
+                    
+                    // Populate form with goal data
+                    document.getElementById('editGoalIndex').value = goalId;
+                    document.getElementById('edit_goal_name').value = goalData.name;
+                    document.getElementById('edit_target_amount').value = goalData.target_amount;
+                    document.getElementById('edit_current_amount').value = goalData.current_amount;
+                    document.getElementById('edit_time_frame').value = goalData.time_frame;
+                    
+                    // Show modal
+                    modal.style.display = "block";
+                }
+            });
+
             // Set progress bar widths after page loads
             document.addEventListener('DOMContentLoaded', function() {
                 document.querySelectorAll('.progress-fill').forEach(function(progressBar) {

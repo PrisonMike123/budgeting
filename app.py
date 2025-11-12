@@ -145,6 +145,32 @@ def generic():
                          chart_data=chart_data)
 
 
+@app.route("/update_goal", methods=['POST'])
+def update_goal():
+    if 'goals' not in session:
+        return redirect(url_for('goals'))
+        
+    try:
+        goal_index = int(request.form.get('goal_index'))
+        if goal_index < 0 or goal_index >= len(session['goals']):
+            raise ValueError("Invalid goal index")
+            
+        # Update the goal
+        session['goals'][goal_index] = {
+            'name': request.form.get('goal_name'),
+            'target_amount': float(request.form.get('target_amount', 0)),
+            'current_amount': float(request.form.get('current_amount', 0)),
+            'time_frame': int(request.form.get('time_frame', 12)),
+            'created_at': session['goals'][goal_index].get('created_at', datetime.datetime.now().isoformat()),
+            'target_date': (datetime.datetime.now() + datetime.timedelta(days=int(request.form.get('time_frame', 12))*30)).isoformat()
+        }
+        session.modified = True
+        
+    except (ValueError, IndexError) as e:
+        print(f"Error updating goal: {e}")
+        
+    return redirect(url_for('goals'))
+
 @app.route("/goals", methods=['GET', 'POST'])
 def goals():
     year = get_current_year()
